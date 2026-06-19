@@ -1,0 +1,9 @@
+<div class="layout">
+  <app-sidebar [open]="sidebarOpen()" (navClick)="closeSidebar()" />
+  <div class="layout__main" (click)="closeSidebar()">
+    <app-topbar (menuToggle)="toggleSidebar()" />
+    <main class="layout__content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

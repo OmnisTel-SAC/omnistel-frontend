@@ -1,0 +1,70 @@
+<section class="hero">
+  <div class="hero__bg">
+    <div class="hero__bg-img" style="background-image: url('img/landing/banner_fondo.jpg')"></div>
+    <div class="hero__orb hero__orb--top-right"></div>
+    <div class="hero__orb hero__orb--bottom-left"></div>
+    <svg class="hero__grid" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <defs><pattern id="grid" width="4" height="4" patternUnits="userSpaceOnUse">
+        <path d="M 4 0 L 0 0 0 4" fill="none" stroke="white" stroke-width="0.1"/>
+      </pattern></defs>
+      <rect width="100%" height="100%" fill="url(#grid)" opacity="0.06" />
+    </svg>
+  </div>
+  <div class="hero__inner">
+    <div class="hero__content">
+      <div class="hero__badge" appScrollAnimation="fade-in-up" [delay]="200">
+        <span class="hero__badge-dot"></span>
+        Red de fibra propia · Disponible en Lima y provincias
+      </div>
+      <h1 class="hero__title" appScrollAnimation="fade-in-up" [delay]="400">
+        Internet de <span class="hero__highlight">fibra óptica</span> con velocidad real garantizada.
+      </h1>
+      <p class="hero__sub" appScrollAnimation="fade-in-up" [delay]="600">
+        Conectividad simétrica, baja latencia y soporte humano 24/7. Para tu hogar y para tu empresa, con la confianza de OmnisTel.
+      </p>
+      <div class="hero__cta" appScrollAnimation="fade-in-up" [delay]="800">
+        <a href="#planes" class="btn-hero-primary glow-primary">
+          Ver planes <i class="pi pi-arrow-right"></i>
+        </a>
+        <a routerLink="/login" class="btn-hero-secondary hero-btn-secondary-hover">
+          <i class="pi pi-ticket"></i> Portal de soporte
+        </a>
+      </div>
+    </div>
+    <div class="hero__card-wrapper" appScrollAnimation="scale-in" [delay]="600">
+      <div class="hero__card-glow"></div>
+      <div class="hero__card" #speedContainer>
+        <div class="hero__card-header">
+          <div class="hero__card-status">
+            <span class="hero__card-dot"></span>
+            <span class="hero__card-label">Test de velocidad · OmnisTel</span>
+          </div>
+          <i class="pi pi-wifi hero__card-wifi"></i>
+        </div>
+        <div class="hero__speeds">
+          <div class="speed-tile">
+            <div class="speed-tile__label">Descarga</div>
+            <div class="speed-tile__value"><span id="speed-download">0</span></div>
+          </div>
+          <div class="speed-tile">
+            <div class="speed-tile__label">Subida</div>
+            <div class="speed-tile__value"><span id="speed-upload">0</span></div>
+          </div>
+          <div class="speed-tile">
+            <div class="speed-tile__label">Ping</div>
+            <div class="speed-tile__value"><span id="speed-ping">0</span></div>
+          </div>
+          <div class="speed-tile">
+            <div class="speed-tile__label">Jitter</div>
+            <div class="speed-tile__value"><span id="speed-jitter">0</span></div>
+          </div>
+        </div>
+        <div class="hero__features">
+          @for (f of features; track f) {
+            <div class="hero__feature"><i class="pi pi-check-circle"></i> {{ f }}</div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

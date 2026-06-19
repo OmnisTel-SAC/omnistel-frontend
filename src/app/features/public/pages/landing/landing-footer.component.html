@@ -1,0 +1,29 @@
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <img class="footer__logo" src="img/landing/Omnistel_logo_blanco.png" alt="OmnisTel" />
+      <p class="footer__desc">Operador de telecomunicaciones licenciado por el MTC. Internet de fibra óptica y servicios IP para hogares y empresas.</p>
+    </div>
+    @for (col of columns; track col.title) {
+      <div class="footer__col">
+        <div class="footer__col-title">{{ col.title }}</div>
+        <ul class="footer__links">
+          @for (link of col.links; track link) {
+            <li><a href="#" class="footer__link">{{ link }}</a></li>
+          }
+        </ul>
+      </div>
+    }
+  </div>
+  <div class="footer__bottom">
+    <div class="footer__bottom-inner">
+      <span>&copy; 2026 OmnisTel S.A.C. — RUC 20512345678. Todos los derechos reservados.</span>
+      <div class="footer__social">
+        <a href="#"><i class="pi pi-facebook"></i></a>
+        <a href="#"><i class="pi pi-twitter"></i></a>
+        <a href="#"><i class="pi pi-linkedin"></i></a>
+        <a href="#"><i class="pi pi-instagram"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>

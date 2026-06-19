@@ -1,0 +1,139 @@
+@use '../../../../../assets/styles/variables' as *;
+
+.users-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  animation: fade-up 0.3s ease;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+
+  &__title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+  }
+
+  &__subtitle {
+    margin-top: 4px;
+    font-size: 14px;
+    color: #6b7280;
+  }
+
+  &__btn {
+    border-radius: 50px !important;
+    background: #3B82F6 !important;
+    border: none !important;
+    flex-shrink: 0;
+  }
+}
+
+.users-skeleton {
+  border-radius: 20px !important;
+}
+
+.users-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 80px 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  color: #9ca3af;
+
+  &__icon { font-size: 3rem; opacity: 0.3; margin-bottom: 16px; }
+  &__text { font-size: 1rem; margin: 0; }
+}
+
+.page-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 8px 0;
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+  }
+
+  &__input {
+    width: 100%;
+  }
+}
+
+:host ::ng-deep {
+  .users-tabs {
+    .p-tablist-tab-list {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  .p-datatable {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+
+    .p-datatable-thead > tr > th {
+      background: #f9fafb;
+      color: #6b7280;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 12px 16px;
+      border: none;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .p-datatable-tbody > tr {
+      background: #ffffff;
+      transition: background 0.15s;
+      &:hover { background: #f9fafb !important; }
+
+      > td {
+        padding: 14px 16px;
+        border: none;
+        border-bottom: 1px solid #f3f4f6;
+        color: #374151;
+        font-size: 0.875rem;
+        background: #ffffff;
+      }
+      &:last-child > td { border-bottom: none; }
+    }
+  }
+
+  .users-role-tag {
+    display: inline-block;
+    background: #f3f4f6;
+    color: #374151;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+}

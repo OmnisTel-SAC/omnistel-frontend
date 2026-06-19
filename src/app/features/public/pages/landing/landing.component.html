@@ -1,0 +1,171 @@
+<app-landing-topbar />
+<app-landing-hero />
+
+<!-- Stats Band -->
+<section class="stats-band" appScrollAnimation="fade-in-up">
+  <div class="stats-band__inner stagger-children" appScrollAnimation="fade-in-up" [delay]="200">
+    @for (s of stats; track s.label) {
+      <div class="stats-band__item">
+        <div class="stats-band__number" [attr.data-count]="s.end">{{ s.number }}</div>
+        <div class="stats-band__label">{{ s.label }}</div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Trust Strip -->
+<div class="trust-strip stagger-children" appScrollAnimation="fade-in-up">
+  <div class="trust-strip__inner">
+    @for (t of trustItems; track t.text) {
+      <div class="trust-strip__item">
+        <i class="pi {{ t.icon }}"></i>
+        <span>{{ t.text }}</span>
+      </div>
+    }
+  </div>
+</div>
+
+<app-landing-plans />
+
+<!-- Services / Empresas -->
+<section id="servicios" class="empresas-section">
+  <div class="empresas-container">
+    <div class="empresas-left" appScrollAnimation="fade-in-left">
+      <h2 class="empresas__title">Soluciones de<br>conectividad<br>empresarial</h2>
+      <p class="empresas__sub">Infraestructura diseñada para empresas que no pueden permitirse interrupciones. Con SLA garantizado, soporte técnico prioritario y tecnología de punta.</p>
+    </div>
+    <div class="empresas-right">
+      <div class="empresas-grid stagger-children" appScrollAnimation="fade-in-up" [delay]="200">
+        @for (s of services; track s.title) {
+          <div class="service-card">
+            <div class="service-card__icon"><i class="pi {{ s.icon }}"></i></div>
+            <h3 class="service-card__title">{{ s.title }}</h3>
+            <p class="service-card__desc">{{ s.desc }}</p>
+            <a href="#contacto" class="service-card__link">Solicitar asesoría <i class="pi pi-arrow-right"></i></a>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Coverage -->
+<section id="cobertura" class="section section--alt" appScrollAnimation="fade-in-up">
+  <div class="section__inner coverage">
+    <div class="coverage__content">
+      <div class="section-heading section-heading--left">
+        <h2 class="section-heading__title">Una red que crece contigo, en todo el Perú</h2>
+        <p class="section-heading__sub">Fibra propia desplegada en las principales ciudades y expansión continua.</p>
+      </div>
+      <div class="coverage__tags stagger-children" appScrollAnimation="fade-in-up" [delay]="200">
+        @for (c of cities; track c) {
+          <span class="coverage__tag"><i class="pi pi-map-marker"></i> {{ c }}</span>
+        }
+      </div>
+      <div class="coverage__search" appScrollAnimation="fade-in-up" [delay]="300">
+        <input class="coverage__input" placeholder="Ingresa tu distrito o dirección" />
+        <button class="coverage__btn">Verificar</button>
+      </div>
+      <p class="coverage__footnote">* Consulta cobertura específica con un asesor.</p>
+    </div>
+    <div class="coverage__map" appScrollAnimation="scale-in" [delay]="200">
+      <div class="coverage__map-pulse"></div>
+      <img class="coverage__img" src="img/landing/red_landing.png" alt="Mapa de cobertura OmnisTel" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<!-- Help Desk -->
+<section id="helpdesk" class="helpdesk-section" appScrollAnimation="fade-in-up">
+  <div class="section__inner">
+    <div class="section-heading" appScrollAnimation="fade-in-up" [delay]="100">
+      <h2 class="section-heading__title">Tu centro de soporte, siempre disponible</h2>
+      <p class="section-heading__sub">Reporta una incidencia, sigue el estado de tu ticket y conversa con tu agente asignado.</p>
+    </div>
+    <div class="helpdesk__grid">
+      <div class="helpdesk__categories">
+        <h3 class="helpdesk__categories-title"><i class="pi pi-list"></i> ¿Con qué necesitas ayuda?</h3>
+        <div class="helpdesk__categories-grid stagger-children" appScrollAnimation="fade-in-up" [delay]="300">
+          @for (cat of categories; track cat.title) {
+            <div class="helpdesk__category">
+              <div class="helpdesk__category-icon"><i class="pi {{ cat.icon }}"></i></div>
+              <div class="helpdesk__category-info">
+                <div class="helpdesk__category-title">{{ cat.title }}</div>
+                <div class="helpdesk__category-prio" [class]="cat.color">Prioridad {{ cat.prio }}</div>
+              </div>
+              <i class="pi pi-arrow-right helpdesk__category-arrow"></i>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="helpdesk__portal" appScrollAnimation="scale-in" [delay]="400">
+        <div class="helpdesk__portal-bg"></div>
+        <div class="helpdesk__portal-content">
+          <div class="helpdesk__portal-badge"><i class="pi pi-lock"></i> Portal seguro</div>
+          <h3 class="helpdesk__portal-title">Accede a tu cuenta OmnisTel</h3>
+          <p class="helpdesk__portal-desc">Gestiona tickets, revisa tu plan y comunícate con tu agente asignado.</p>
+          <ul class="helpdesk__portal-list">
+            <li><i class="pi pi-ticket"></i> Crea y monitorea tus tickets</li>
+            <li><i class="pi pi-history"></i> Historial completo de incidencias</li>
+            <li><i class="pi pi-comments"></i> Chat directo con soporte</li>
+          </ul>
+          <div class="helpdesk__portal-actions">
+            <a routerLink="/login" class="helpdesk__portal-btn-primary">Iniciar sesión <i class="pi pi-sign-in"></i></a>
+            <a routerLink="/register" class="helpdesk__portal-btn-secondary">Crear cuenta</a>
+          </div>
+          <div class="helpdesk__portal-emergency">
+            ¿Emergencia? Llama al <strong>0800-12345</strong> · 24/7
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contacto" class="section section--card" appScrollAnimation="fade-in-up">
+  <div class="section__inner" style="max-width:768px;text-align:center">
+    <div class="section-heading" appScrollAnimation="fade-in-up" [delay]="100">
+      <h2 class="section-heading__title">Hablemos de tu próximo proyecto de conectividad</h2>
+      <p class="section-heading__sub">Un asesor te contactará en menos de 24 horas.</p>
+    </div>
+    <div class="contact__grid stagger-children" appScrollAnimation="fade-in-up" [delay]="200">
+      @for (c of contacts; track c.title) {
+        <div class="contact__card">
+          <div class="contact__card-icon"><i class="pi {{ c.icon }}"></i></div>
+          <div class="contact__card-label">{{ c.title }}</div>
+          <div class="contact__card-value">{{ c.value }}</div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="faq-section" appScrollAnimation="fade-in-up">
+  <div class="section__inner" style="max-width:896px">
+    <div class="section-heading section-heading--left" appScrollAnimation="fade-in-up" [delay]="100">
+      <h2 class="section-heading__title" style="font-size:2.5rem">Resuelve tus dudas frecuentes</h2>
+      <p class="section-heading__sub">Encuentra ayuda rápida sobre acceso, planes y soporte.</p>
+    </div>
+    <div class="faq__list" appScrollAnimation="fade-in-up" [delay]="200">
+      @for (item of faqs; track item.q; let i = $index) {
+        <div class="faq__item" [class.faq__item--open]="openFaq === i">
+          <button class="faq__question" (click)="toggleFaq(i)">
+            <span>{{ item.q }}</span>
+            <i class="pi pi-chevron-down" [class.open]="openFaq === i"></i>
+          </button>
+          <div class="faq__answer-wrapper" [style.max-height]="openFaq === i ? '300px' : '0'">
+            <div class="faq__answer">{{ item.a }}</div>
+          </div>
+        </div>
+      }
+    </div>
+    <div class="faq__footer" appScrollAnimation="fade-in-up" [delay]="300">
+      <p>¿Otra consulta? Nuestro equipo responde.</p>
+      <a routerLink="/login" class="faq__help-btn"><i class="pi pi-comments"></i> Ayuda</a>
+    </div>
+  </div>
+</section>
+
+<app-landing-footer />

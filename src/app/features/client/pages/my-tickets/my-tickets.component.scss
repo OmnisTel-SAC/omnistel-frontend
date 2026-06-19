@@ -1,0 +1,191 @@
+@use '../../../../../assets/styles/variables' as *;
+
+.my-tickets-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  animation: fade-up 0.3s ease;
+}
+
+.my-tickets-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.my-tickets-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.my-tickets-header__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.my-tickets-header__subtitle {
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.my-tickets-empty {
+  text-align: center;
+  padding: 60px 24px;
+}
+
+.my-tickets-empty__icon {
+  font-size: 64px;
+  color: #C4D2B9;
+  margin-bottom: 16px;
+}
+
+.my-tickets-empty__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.my-tickets-empty__desc {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 20px;
+}
+
+.my-tickets-empty__btn {
+  border-radius: 50px !important;
+  background: #4C4C4C !important;
+  border-color: #4C4C4C !important;
+}
+
+.my-tickets-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.my-tickets-skeleton__row {
+  display: grid;
+  grid-template-columns: 60px 1fr 100px 80px 100px 120px;
+  gap: 16px;
+  align-items: center;
+}
+
+:host ::ng-deep {
+  .my-tickets-table {
+    &.p-datatable {
+      .p-datatable-table {
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+
+      .p-datatable-thead > tr > th {
+        background: #f9fafb;
+        color: #374151;
+        font-weight: 600;
+        font-size: 0.8125rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 14px 16px;
+        border-bottom: 2px solid #e5e7eb;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+      }
+
+      .p-datatable-tbody > tr {
+        cursor: pointer;
+        transition: background 0.15s;
+        background: #ffffff;
+
+        &:hover {
+          background: #f3f4f6;
+        }
+
+        > td {
+          padding: 14px 16px;
+          border: none;
+          border-bottom: 1px solid #e5e7eb;
+          font-size: 0.875rem;
+          color: #1f2937;
+          background: transparent;
+        }
+      }
+    }
+
+    .my-tickets-table__id {
+      color: #5f8ab7;
+      font-weight: 600;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .my-tickets-table__date {
+      color: #6b7280;
+      font-size: 0.8125rem;
+    }
+
+    .my-tickets-table__tag {
+      border-radius: 8px !important;
+      font-size: 0.8125rem;
+      padding: 4px 12px !important;
+      border: none !important;
+
+      .p-tag-value {
+        font-weight: 500;
+      }
+    }
+
+    .p-paginator {
+      margin-top: 12px;
+      background: transparent;
+      padding: 8px 0;
+      border: none;
+
+      .p-paginator-page {
+        border-radius: 50px;
+        min-width: 36px;
+        height: 36px;
+        color: #374151;
+        transition: background 0.15s;
+      }
+
+      .p-paginator-page:not(.p-highlight):hover {
+        background: #f3f4f6;
+      }
+
+      .p-paginator-page.p-highlight {
+        background: #C4D2B9;
+        color: #1f2937;
+      }
+
+      .p-paginator-first,
+      .p-paginator-prev,
+      .p-paginator-next,
+      .p-paginator-last {
+        color: #6b7280;
+        min-width: 36px;
+        height: 36px;
+        border-radius: 50px;
+
+        &:hover {
+          background: #f3f4f6;
+        }
+      }
+
+      .p-paginator-current {
+        color: #6b7280;
+        font-size: 0.8125rem;
+      }
+    }
+  }
+}

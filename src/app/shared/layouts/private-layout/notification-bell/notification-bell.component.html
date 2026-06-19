@@ -1,0 +1,48 @@
+<div class="notif-bell">
+  <button class="notif-bell__btn" (click)="togglePanel()" aria-label="Notificaciones">
+    <div class="notif-bell__icon-wrapper">
+      <i class="pi pi-bell notif-bell__icon"></i>
+    </div>
+    <span class="notif-bell__text">Notificaciones</span>
+    @if (store.unreadCount() > 0) {
+      <span class="notif-bell__badge">{{ store.unreadCount() }}</span>
+    }
+  </button>
+
+  @if (panelOpen) {
+    <div class="notif-bell__overlay" (click)="panelOpen = false"></div>
+    <div class="notif-bell__panel">
+      <div class="notif-bell__panel-header">
+        <span class="notif-bell__panel-title">Notificaciones</span>
+        <div class="notif-bell__panel-actions">
+          @if (store.unreadCount() > 0) {
+            <button class="notif-bell__mark-all" (click)="markAllRead($event)">Marcar todo leído</button>
+          }
+          <span class="notif-bell__panel-count">{{ store.unreadCount() }} nuevas</span>
+        </div>
+      </div>
+      <div class="notif-bell__list">
+        @for (n of store.notifications(); track n.id) {
+          <div class="notif-bell__item"
+               [class.notif-bell__item--unread]="!n.read"
+               (click)="navigateToTicket(n.ticketId)">
+            <div class="notif-bell__item-dot" [class.notif-bell__item-dot--read]="n.read"></div>
+            <div class="notif-bell__item-content">
+              <div class="notif-bell__item-title">{{ n.title }}</div>
+              <div class="notif-bell__item-message">{{ n.message }}</div>
+              <div class="notif-bell__item-time">{{ n.createdAt | date:'dd/MM HH:mm' }}</div>
+            </div>
+          </div>
+        } @empty {
+          <div class="notif-bell__empty">
+            <i class="pi pi-bell-slash"></i>
+            <span>No hay notificaciones</span>
+          </div>
+        }
+      </div>
+      <div class="notif-bell__panel-footer" routerLink="/notifications" (click)="panelOpen = false">
+        <span>Ver todas</span>
+      </div>
+    </div>
+  }
+</div>

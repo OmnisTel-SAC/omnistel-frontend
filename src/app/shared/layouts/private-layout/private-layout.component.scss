@@ -1,0 +1,22 @@
+@use '../../../../assets/styles/variables' as *;
+
+.layout {
+  min-height: 100vh;
+  background: #F0F0F0;
+}
+
+.layout__main {
+  margin-left: 284px;
+  display: flex;
+  flex-direction: column;
+
+  @include tablet-down { margin-left: 0; }
+}
+
+.layout__content {
+  flex: 1;
+  margin-top: 80px;
+  padding: 24px;
+  background: #F0F0F0;
+  min-height: calc(100vh - 80px);
+}

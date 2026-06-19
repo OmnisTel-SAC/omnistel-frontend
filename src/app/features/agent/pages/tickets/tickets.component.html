@@ -1,0 +1,96 @@
+<div class="agent-tickets-page">
+  <p-toast position="top-right" />
+
+  <div class="agent-tickets-card">
+    <div class="agent-tickets-header">
+      <div>
+        <h1 class="agent-tickets-header__title">Cola de Tickets</h1>
+        <p class="agent-tickets-header__subtitle">Tickets abiertos esperando ser asignados</p>
+      </div>
+    </div>
+
+    @if (loading && tickets.length === 0) {
+      <div class="agent-tickets-skeleton">
+        @for (item of [1,2,3,4,5]; track item) {
+          <div class="agent-tickets-skeleton__row">
+            <p-skeleton width="60px" height="20px" />
+            <p-skeleton width="40%" height="20px" />
+            <p-skeleton width="100px" height="20px" />
+            <p-skeleton width="80px" height="20px" />
+            <p-skeleton width="100px" height="20px" />
+            <p-skeleton width="120px" height="20px" />
+          </div>
+        }
+      </div>
+    } @else if (tickets.length === 0) {
+      <div class="agent-tickets-empty">
+        <i class="pi pi-check-circle agent-tickets-empty__icon"></i>
+        <h3 class="agent-tickets-empty__title">No hay tickets pendientes</h3>
+        <p class="agent-tickets-empty__desc">Todos los tickets han sido asignados o no hay tickets abiertos.</p>
+      </div>
+    } @else {
+      <p-table
+        [value]="tickets"
+        [lazy]="true"
+        [totalRecords]="totalRecords"
+        [loading]="loading"
+        dataKey="id"
+        [paginator]="true"
+        [rows]="size"
+        [pageLinks]="5"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        (onPage)="onPage($event)"
+        styleClass="agent-tickets-table"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th># ID</th>
+            <th>Título</th>
+            <th>Prioridad</th>
+            <th>Categoría</th>
+            <th>Creado</th>
+            <th>Acción</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-ticket>
+          <tr>
+            <td>
+              <a class="agent-tickets-table__id" [routerLink]="['/agent/tickets', ticket.id]">
+                #{{ ticket.id }}
+              </a>
+            </td>
+            <td [pTooltip]="ticket.title" tooltipPosition="top">
+              {{ truncate(ticket.title, 50) }}
+            </td>
+            <td>
+              <p-tag
+                [value]="ticket.priority | priorityLabel"
+                [severity]="getPrioritySeverity(ticket.priority)"
+                styleClass="agent-tickets-table__tag"
+              />
+            </td>
+            <td>
+              <span [style]="getCategoryStyle()">{{ getCategoryLabel(ticket.category) }}</span>
+            </td>
+            <td class="agent-tickets-table__date">
+              {{ ticket.createdAt | date:'dd/MM/yyyy HH:mm' }}
+            </td>
+            <td>
+              <button
+                pButton
+                icon="pi pi-arrow-right"
+                label="Tomar"
+                class="p-button-sm p-button-success"
+                (click)="confirmTakeTicket(ticket)"
+                [pTooltip]="'Asignarte este ticket'"
+                tooltipPosition="top"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    }
+  </div>
+
+  <p-confirmDialog />
+</div>

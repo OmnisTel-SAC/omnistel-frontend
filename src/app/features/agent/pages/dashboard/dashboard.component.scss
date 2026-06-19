@@ -1,0 +1,362 @@
+@use '../../../../../assets/styles/variables' as *;
+
+.dashboard-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+  animation: fade-up 0.3s ease;
+}
+
+// ─── Header ───
+.dashboard-header {
+  margin-bottom: 24px;
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $color-foreground;
+    margin: 0;
+  }
+
+  &__subtitle {
+    margin: 4px 0 0;
+    font-size: 0.875rem;
+    color: $color-muted-foreground;
+  }
+}
+
+// ─── KPI Cards ───
+.dashboard-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.dashboard-kpi-card {
+  background: $color-card;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  &--link {
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+  }
+
+  &__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+
+    &--queue {
+      background: #FEF3C7;
+      color: #D97706;
+    }
+
+    &--assigned {
+      background: #DBEAFE;
+      color: #2563EB;
+    }
+
+    &--progress {
+      background: #EDE9FE;
+      color: #7C3AED;
+    }
+
+    &--resolved {
+      background: #D1FAE5;
+      color: #059669;
+    }
+  }
+
+  &__value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: $color-foreground;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  &__label {
+    font-size: 0.8125rem;
+    color: $color-muted-foreground;
+    font-weight: 500;
+  }
+}
+
+// ─── Grid (2 columns) ───
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 20px;
+  align-items: start;
+}
+
+.dashboard-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// ─── Card wrapper ───
+.dashboard-card {
+  background: $color-card;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $color-foreground;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__subtitle {
+    font-size: 0.75rem;
+    color: $color-muted-foreground;
+    background: $color-muted;
+    padding: 2px 10px;
+    border-radius: 6px;
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 32px 16px;
+    color: $color-muted-foreground;
+    font-size: 0.875rem;
+
+    &-icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      display: block;
+      color: $color-muted-foreground;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  &__skeleton-row {
+    margin-bottom: 8px;
+  }
+
+  &__more {
+    display: block;
+    text-align: center;
+    padding: 12px 0 4px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: $color-accent;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// ─── Critical list ───
+.critical-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.critical-item {
+  background: $color-muted;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-left: 4px solid #EF4444;
+
+  &__main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  &__id {
+    color: $color-accent;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $color-foreground;
+  }
+
+  &__tag {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.75rem;
+    color: $color-muted-foreground;
+    flex-wrap: wrap;
+  }
+
+  &__client {
+    font-weight: 500;
+  }
+
+  &__cat {
+    background: #C4D2B9;
+    border-radius: 6px;
+    padding: 1px 8px;
+    color: $color-foreground;
+  }
+
+  &__date {
+    white-space: nowrap;
+  }
+
+  &__action {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+// ─── Chart ───
+.chart-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+  max-height: 240px;
+
+  ::ng-deep canvas {
+    max-width: 220px;
+    max-height: 220px;
+  }
+}
+
+// ─── Resolved list ───
+.resolved-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.resolved-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s;
+
+  &:hover {
+    background: $color-muted;
+  }
+
+  &__icon {
+    color: #10B981;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__id {
+    font-weight: 700;
+    font-size: 0.8125rem;
+    color: $color-accent;
+    white-space: nowrap;
+  }
+
+  &__title {
+    font-size: 0.8125rem;
+    color: $color-foreground;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__time {
+    font-size: 0.75rem;
+    color: $color-muted-foreground;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+
+// ─── Responsive ───
+@include tablet-down {
+  .dashboard-kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@include mobile {
+  .dashboard-kpis {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dashboard-page {
+    padding: 16px;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

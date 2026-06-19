@@ -1,0 +1,210 @@
+@use '../../../../../assets/styles/variables' as *;
+
+.agent-tickets-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.agent-tickets-card {
+  background: $color-card;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.agent-tickets-header {
+  padding: 24px 28px 16px;
+  border-bottom: 1px solid $color-border;
+
+  &__title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: $color-foreground;
+    margin: 0;
+  }
+
+  &__subtitle {
+    margin: 4px 0 0;
+    font-size: 0.875rem;
+    color: $color-muted-foreground;
+  }
+}
+
+// ─── Tabs ───
+.agent-tickets-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid $color-border;
+  padding: 0 28px;
+}
+
+.agent-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: $color-muted-foreground;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: -1px;
+
+  i {
+    font-size: 1rem;
+  }
+
+  &:hover {
+    color: $color-foreground;
+    background: $color-muted;
+  }
+
+  &--active {
+    color: $color-primary;
+    border-bottom-color: $color-primary;
+  }
+}
+
+.agent-tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 11px;
+  background: $color-muted;
+  color: $color-muted-foreground;
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  .agent-tab-btn--active & {
+    background: rgba($color-primary, 0.15);
+    color: $color-primary;
+  }
+}
+
+// ─── Skeleton ───
+.agent-tickets-skeleton {
+  padding: 20px 28px;
+
+  &__row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+}
+
+// ─── Empty ───
+.agent-tickets-empty {
+  text-align: center;
+  padding: 60px 28px;
+
+  &__icon {
+    font-size: 3rem;
+    color: $color-muted-foreground;
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $color-foreground;
+    margin: 0 0 6px;
+  }
+
+  &__desc {
+    font-size: 0.875rem;
+    color: $color-muted-foreground;
+    margin: 0;
+  }
+}
+
+// ─── Table ───
+:host ::ng-deep {
+  .agent-tickets-table {
+    &.p-datatable {
+      font-size: 0.875rem;
+
+      .p-datatable-table {
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+
+      .p-datatable-thead > tr > th {
+        background: $color-muted;
+        color: $color-muted-foreground;
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        padding: 12px 16px;
+        border: none;
+        border-bottom: 1px solid $color-border;
+      }
+
+      .p-datatable-tbody > tr {
+        background: #ffffff;
+        cursor: default;
+
+        &:nth-child(even) {
+          background: #ffffff;
+        }
+
+        &:hover {
+          background: #f4f5f2;
+        }
+
+        > td {
+          padding: 12px 16px;
+          border: none;
+          border-bottom: 1px solid $color-border;
+          color: $color-foreground;
+          vertical-align: middle;
+          background: transparent;
+        }
+      }
+
+      .p-paginator {
+        padding: 12px 16px;
+        border: none;
+        background: transparent;
+      }
+    }
+  }
+
+  .agent-tickets-table__tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+  }
+}
+
+.agent-tickets-table__id {
+  color: $color-accent;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.agent-tickets-table__date {
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  color: $color-muted-foreground;
+}
+
+// ─── Actions ───
+.agent-tickets-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: nowrap;
+}

@@ -1,0 +1,33 @@
+<section id="planes" class="plans">
+  <div class="plans__inner">
+    <div class="section-heading" appScrollAnimation="fade-in-up">
+      <h2 class="section-heading__title">Fibra óptica con telefonía incluida</h2>
+      <p class="section-heading__sub">Sin permanencia mínima en planes básicos. Sin sorpresas en tu factura.</p>
+    </div>
+    <div class="plans__grid stagger-children" appScrollAnimation="fade-in-up" [delay]="200">
+      @for (p of plans; track p.name) {
+        <div class="plan-card" [class.plan-card--popular]="p.popular">
+          @if (p.popular) {
+            <span class="plan-card__badge">Más popular</span>
+          }
+          <div class="plan-card__eyebrow">{{ p.eyebrow }}</div>
+          <div class="plan-card__speed">
+            <span class="plan-card__speed-value">{{ p.speed }}</span>
+            <span class="plan-card__speed-unit">Mbps</span>
+          </div>
+          <div class="plan-card__price">
+            <span class="plan-card__price-currency">S/</span>
+            <span class="plan-card__price-value">{{ p.price }}</span>
+            <span class="plan-card__price-period">/mes</span>
+          </div>
+          <ul class="plan-card__features">
+            @for (f of p.features; track f) {
+              <li class="plan-card__feature"><i class="pi pi-check-circle"></i> {{ f }}</li>
+            }
+          </ul>
+          <button class="plan-card__btn" [class.plan-card__btn--primary]="p.popular">Contratar ahora</button>
+        </div>
+      }
+    </div>
+  </div>
+</section>

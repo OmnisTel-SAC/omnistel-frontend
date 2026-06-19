@@ -1,0 +1,102 @@
+// ─── Colores Corporativos ───
+$color-primary: #9bd04a;
+$color-dark: #262824;
+$color-light: #aae199;
+$color-white: #ffffff;
+$color-accent: #5f8ab7;
+$color-accent-secondary: #ff6b6b;
+$color-accent-gradient: linear-gradient(135deg, #9bd04a, #5f8ab7);
+
+// ─── Fondos y Superficies ───
+$color-background: #f8f9f7;
+$color-foreground: #262824;
+$color-card: #ffffff;
+$color-card-foreground: #262824;
+$color-muted: #f0f1ee;
+$color-muted-foreground: #7d7f79;
+$color-border: #e2e3df;
+$color-input: #e2e3df;
+$color-ring: #9bd04a;
+
+// ─── Sidebar ───
+$color-sidebar: #262824;
+$color-sidebar-foreground: #f5f5f3;
+$color-sidebar-border: #353732;
+
+// ─── Estados de Ticket ───
+$status-open: #f39c12;
+$status-assigned: #3498db;
+$status-in-progress: #2196F3;
+$status-waiting-info: #e67e22;
+$status-resolved: #27ae60;
+$status-closed: #95a5a6;
+$status-reopened: #9b59b6;
+
+// ─── Prioridades ───
+$priority-low: #27ae60;
+$priority-medium: #f39c12;
+$priority-high: #e74c3c;
+$priority-critical: #c0392b;
+
+// ─── Breakpoints Responsive ───
+$breakpoint-mobile: 768px;
+$breakpoint-tablet: 1024px;
+
+// ─── Mixins Responsive ───
+@mixin mobile {
+  @media (max-width: #{$breakpoint-mobile - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: $breakpoint-mobile) and (max-width: #{$breakpoint-tablet - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
+@mixin tablet-down {
+  @media (max-width: #{$breakpoint-tablet - 1px}) {
+    @content;
+  }
+}
+
+:root {
+  --color-primary: #{$color-primary};
+  --color-primary-soft: #{$color-light};
+  --color-dark: #{$color-dark};
+  --color-light: #{$color-light};
+  --color-white: #{$color-white};
+  --color-accent: #{$color-accent};
+  --color-accent-secondary: #{$color-accent-secondary};
+  --color-background: #{$color-background};
+  --color-foreground: #{$color-foreground};
+  --color-card: #{$color-card};
+  --color-card-foreground: #{$color-card-foreground};
+  --color-muted: #{$color-muted};
+  --color-muted-foreground: #{$color-muted-foreground};
+  --color-border: #{$color-border};
+  --color-input: #{$color-input};
+  --color-ring: #{$color-ring};
+  --color-sidebar: #{$color-sidebar};
+  --color-sidebar-foreground: #{$color-sidebar-foreground};
+  --color-sidebar-border: #{$color-sidebar-border};
+
+  --status-open: #{$status-open};
+  --status-assigned: #{$status-assigned};
+  --status-in-progress: #{$status-in-progress};
+  --status-waiting-info: #{$status-waiting-info};
+  --status-resolved: #{$status-resolved};
+  --status-closed: #{$status-closed};
+  --status-reopened: #{$status-reopened};
+  --priority-low: #{$priority-low};
+  --priority-medium: #{$priority-medium};
+  --priority-high: #{$priority-high};
+  --priority-critical: #{$priority-critical};
+}

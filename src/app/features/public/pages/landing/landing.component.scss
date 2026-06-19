@@ -1,0 +1,337 @@
+@use '../../../../../assets/styles/variables' as *;
+
+// ─── Section Heading ───
+.section-heading {
+  max-width: 42rem; margin: 0 auto; text-align: center;
+}
+.section-heading--left { margin: 0; text-align: left; }
+.section-heading__title {
+  margin-top: 1rem; font-size: 1.875rem; font-weight: 800; letter-spacing: -0.02em;
+}
+@include mobile { .section-heading__title { font-size: 1.875rem; } }
+@include tablet { .section-heading__title { font-size: 2.25rem; } }
+@include desktop { .section-heading__title { font-size: 2.25rem; } }
+.section-heading__sub { margin-top: 0.75rem; color: $color-muted-foreground; }
+
+.section { padding: 6rem 1.5rem; background: $color-background; }
+.section--alt { background: $color-background; }
+.section--card { background: $color-card; border-top: 1px solid $color-border; }
+.section__inner { max-width: 1280px; margin: 0 auto; }
+
+// ─── Stats Band ───
+.stats-band {
+  background: linear-gradient(135deg, #9bd04a 0%, #aae199 100%);
+  color: $color-dark;
+  margin-top: -3.5rem;
+}
+@include mobile { .stats-band { margin-top: -1.5rem; } }
+.stats-band__inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 1.5rem 0.75rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  text-align: center;
+}
+@media (min-width: 768px) { .stats-band__inner { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; padding: 0 1.5rem 1.25rem; } }
+.stats-band__item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding-bottom: 1.25rem;
+}
+.stats-band__number {
+  font-size: 1.875rem; font-weight: 800; letter-spacing: -0.02em; color: $color-dark;
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 768px) { .stats-band__number { font-size: 2.25rem; } }
+.stats-band__label {
+  font-size: 0.75rem; margin-top: 0.25rem; font-weight: 500; color: rgb(38 40 36 / 0.7);
+}
+
+// ─── Trust Strip ───
+.trust-strip { border-bottom: 1px solid $color-border; background: $color-card; }
+.trust-strip__inner {
+  max-width: 1280px; margin: 0 auto; padding: 2rem 1.5rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; text-align: center;
+}
+@media (min-width: 768px) { .trust-strip__inner { grid-template-columns: repeat(4, 1fr); } }
+.trust-strip__item {
+  display: flex; align-items: center; justify-content: center; gap: 0.75rem; font-size: 0.875rem; font-weight: 600;
+}
+.trust-strip__item i { color: $color-primary; font-size: 1.25rem; }
+
+// ─── Services / Empresas (sticky 2-column) ───
+.empresas-section {
+  padding: 6rem 1.5rem;
+  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+}
+.empresas-container {
+  max-width: 1280px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr; gap: 2rem;
+  align-items: flex-start;
+}
+@media (min-width: 1024px) {
+  .empresas-container { grid-template-columns: 1fr 1.5fr; gap: 3rem; }
+}
+.empresas-left {
+  align-self: flex-start;
+}
+@media (min-width: 1024px) {
+  .empresas-left {
+    position: sticky; top: 120px;
+  }
+}
+.empresas__title {
+  font-size: 2rem; font-weight: 900; letter-spacing: -0.02em; margin-top: 0; line-height: 1.1;
+}
+@include mobile { .empresas__title { font-size: 2rem; } }
+@include tablet { .empresas__title { font-size: 2.5rem; } }
+@include desktop { .empresas__title { font-size: 2.75rem; } }
+.empresas__sub { margin-top: 0.75rem; color: $color-muted-foreground; }
+
+.empresas-grid {
+  display: grid; gap: 1.25rem;
+}
+@media (min-width: 768px) { .empresas-grid { grid-template-columns: repeat(2, 1fr); } }
+.service-card {
+  border-radius: 1rem; background: $color-card; border: 1px solid $color-border;
+  padding: 1.75rem; transition: all 0.3s ease; will-change: transform;
+  &:hover {
+    border-color: $color-primary; box-shadow: 0 20px 40px -12px rgb(0 0 0 / 0.15);
+    transform: translateY(-0.25rem);
+    .service-card__icon { transform: scale(1.1); }
+  }
+}
+.service-card__icon {
+  width: 3rem; height: 3rem; border-radius: 0.75rem;
+  background: $color-foreground; color: $color-background;
+  display: grid; place-items: center; font-size: 1.25rem;
+  transition: transform 0.3s ease; will-change: transform;
+}
+.service-card__title { margin-top: 1.25rem; font-size: 1.125rem; font-weight: 700; }
+.service-card__desc { margin-top: 0.5rem; font-size: 0.875rem; color: $color-muted-foreground; line-height: 1.6; }
+.service-card__link {
+  margin-top: 1.25rem; display: inline-flex; align-items: center; gap: 0.25rem;
+  font-size: 0.875rem; font-weight: 600; color: $color-foreground; text-decoration: none;
+  position: relative; transition: gap 0.3s ease;
+  &::after {
+    content: ''; position: absolute; bottom: -2px; left: 0;
+    width: 0; height: 2px; background: $color-primary;
+    transition: width 0.3s ease;
+  }
+  &:hover { gap: 0.5rem; &::after { width: 100%; } }
+}
+
+// ─── Coverage ───
+.coverage {
+  display: grid; gap: 3rem; align-items: center;
+}
+@media (min-width: 1024px) { .coverage { grid-template-columns: 1fr 1fr; } }
+.coverage__tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 2rem; }
+.coverage__tag {
+  padding: 0.375rem 0.75rem; border-radius: 999px;
+  background: $color-muted; font-size: 0.875rem; font-weight: 500;
+  display: flex; align-items: center; gap: 0.375rem;
+  transition: background 0.2s ease;
+  &:hover { background: rgb(155 208 74 / 0.15); }
+}
+.coverage__tag i { color: $color-primary; font-size: 0.75rem; }
+.coverage__search { display: flex; gap: 0.5rem; margin-top: 2rem; max-width: 28rem; }
+.coverage__input {
+  flex: 1; padding: 0.75rem 1rem; border-radius: 0.75rem;
+  border: 1px solid $color-border; background: $color-background;
+  font-size: 0.875rem; outline: none;
+  transition: all 0.3s ease;
+  &:focus { border-color: $color-ring; box-shadow: 0 0 0 3px rgb(155 208 74 / 0.15); }
+}
+.coverage__btn {
+  padding: 0.75rem 1.25rem; border-radius: 0.75rem;
+  background: $color-primary; color: $color-dark; font-weight: 700;
+  border: none; white-space: nowrap; cursor: pointer;
+  transition: all 0.2s ease;
+  &:hover { transform: scale(1.03); filter: brightness(0.95); }
+  &:active { transform: scale(0.98); }
+}
+.coverage__footnote { margin-top: 0.75rem; font-size: 0.75rem; color: $color-muted-foreground; }
+.coverage__map {
+  position: relative; max-width: 24rem; margin: 0 auto; width: 100%;
+}
+.coverage__map-pulse {
+  position: absolute; top: 40%; left: 55%;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: $color-primary; z-index: 2;
+  &::before {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    background: $color-primary;
+    animation: pulse-ring 2s ease-out infinite;
+  }
+}
+.coverage__img {
+  width: 100%; height: auto; object-fit: contain; position: relative;
+  border-radius: 1rem;
+}
+
+// ─── Help Desk (dark section) ───
+.helpdesk-section {
+  padding: 6rem 1.5rem;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: $color-sidebar-foreground;
+  .section-heading__title { color: $color-sidebar-foreground; }
+  .section-heading__sub { color: rgb(245 245 243 / 0.6); }
+}
+.helpdesk__grid {
+  display: grid; gap: 1.5rem; margin-top: 3.5rem;
+}
+@media (min-width: 1024px) { .helpdesk__grid { grid-template-columns: 3fr 2fr; } }
+.helpdesk__categories {
+  background: transparent;
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+.helpdesk__categories-title {
+  font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;
+  color: $color-sidebar-foreground;
+}
+.helpdesk__categories-title i { color: $color-primary; }
+.helpdesk__categories-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+@media (min-width: 640px) { .helpdesk__categories-grid { grid-template-columns: 1fr 1fr; } }
+.helpdesk__category {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.75rem; border-radius: 0.75rem;
+  background: rgb(255 255 255 / 0.05);
+  transition: all 0.3s ease; cursor: pointer;
+  &:hover {
+    background: rgb(255 255 255 / 0.1);
+    transform: translateX(5px);
+  }
+}
+.helpdesk__category-icon {
+  width: 2.5rem; height: 2.5rem; border-radius: 0.5rem;
+  display: grid; place-items: center; flex-shrink: 0;
+  color: $color-white;
+}
+.helpdesk__category-info { flex: 1; }
+.helpdesk__category-title { font-size: 0.875rem; font-weight: 600; color: $color-sidebar-foreground; }
+.helpdesk__category-prio { font-size: 0.75rem; font-weight: 500; }
+.text-prio-high { color: $color-accent-secondary; }
+.text-prio-medium { color: $priority-medium; }
+.text-prio-low { color: $priority-low; }
+.helpdesk__category-arrow { color: rgb(245 245 243 / 0.5); font-size: 0.75rem; }
+
+.helpdesk__portal {
+  background: transparent;
+  border: 1px solid rgb(155 208 74 / 0.2);
+  color: $color-sidebar-foreground;
+  border-radius: 1rem; padding: 1.75rem; position: relative; overflow: hidden;
+}
+.helpdesk__portal-bg {
+  position: absolute; top: -5rem; right: -5rem;
+  width: 15rem; height: 15rem; background: rgb(155 208 74 / 0.15);
+  border-radius: 50%; filter: blur(60px);
+}
+.helpdesk__portal-content { position: relative; }
+.helpdesk__portal-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.25rem 0.625rem; border-radius: 999px;
+  background: rgb(155 208 74 / 0.15); border: 1px solid rgb(155 208 74 / 0.3);
+  color: $color-primary; font-size: 0.75rem; font-weight: 600;
+}
+.helpdesk__portal-title { margin-top: 1rem; font-size: 1.5rem; font-weight: 700; line-height: 1.2; }
+.helpdesk__portal-desc { margin-top: 0.5rem; font-size: 0.875rem; color: rgb(245 245 243 / 0.7); }
+.helpdesk__portal-list { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.helpdesk__portal-list li {
+  display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;
+}
+.helpdesk__portal-list i { color: $color-primary; }
+.helpdesk__portal-actions {
+  margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;
+}
+.helpdesk__portal-btn-primary {
+  width: 100%; text-align: center; padding: 0.75rem;
+  border-radius: 0.75rem; background: $color-primary;
+  color: $color-dark; font-weight: 700; text-decoration: none;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  transition: all 0.3s ease;
+  &:hover { transform: scale(1.03); filter: brightness(0.95); }
+  &:active { transform: scale(0.98); }
+}
+.helpdesk__portal-btn-secondary {
+  width: 100%; text-align: center; padding: 0.75rem;
+  border-radius: 0.75rem; border: 1px solid rgb(155 208 74 / 0.4);
+  color: $color-sidebar-foreground; font-weight: 600; text-decoration: none;
+  background: transparent;
+  transition: all 0.3s ease;
+  &:hover { border-color: $color-primary; background: rgb(155 208 74 / 0.1); }
+}
+.helpdesk__portal-emergency {
+  margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgb(245 245 243 / 0.15);
+  font-size: 0.75rem; color: rgb(245 245 243 / 0.6);
+}
+.helpdesk__portal-emergency strong { color: $color-primary; }
+
+// ─── Contact ───
+.contact__grid {
+  display: grid; gap: 1.25rem; margin-top: 2.5rem;
+}
+@media (min-width: 768px) { .contact__grid { grid-template-columns: repeat(3, 1fr); } }
+.contact__card {
+  background: $color-background; border-radius: 1rem;
+  border: 1px solid $color-border; padding: 1.5rem; text-align: center;
+  transition: all 0.3s ease; will-change: transform;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px -10px rgb(0 0 0 / 0.1);
+    .contact__card-icon { transform: scale(1.1) rotate(5deg); }
+  }
+}
+.contact__card-icon {
+  width: 3rem; height: 3rem; border-radius: 0.75rem;
+  background: $color-foreground; color: $color-background;
+  display: grid; place-items: center; margin: 0 auto; font-size: 1.25rem;
+  transition: transform 0.3s ease; will-change: transform;
+}
+.contact__card-label { margin-top: 0.75rem; font-size: 0.875rem; color: $color-muted-foreground; }
+.contact__card-value { margin-top: 0.25rem; font-weight: 700; }
+
+// ─── FAQ ───
+.faq-section { padding: 6rem 1.5rem; background: #f8f9fa; }
+.faq__list { border-top: 1px solid $color-border; margin-top: 2.5rem; }
+.faq__item {
+  border-bottom: 1px solid $color-border;
+  transition: background 0.2s ease;
+  &:hover { background: rgb(0 0 0 / 0.02); }
+}
+.faq__question {
+  width: 100%; display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 1rem; background: none; border: none;
+  font-size: 1rem; font-weight: 600; color: $color-foreground;
+  cursor: pointer; text-align: left;
+  transition: background 0.2s ease;
+  &:hover { background: rgb(0 0 0 / 0.03); }
+}
+.faq__question i {
+  transition: transform 0.3s ease; font-size: 0.875rem;
+  &.open { transform: rotate(180deg); }
+}
+.faq__answer-wrapper {
+  overflow: hidden; transition: max-height 0.3s ease;
+}
+.faq__answer {
+  padding: 0 1rem 1.25rem; font-size: 0.875rem;
+  color: $color-muted-foreground; line-height: 1.6;
+}
+.faq__footer { margin-top: 2.5rem; }
+.faq__footer p { font-size: 0.875rem; color: $color-muted-foreground; }
+.faq__help-btn {
+  margin-top: 0.75rem; display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.625rem 1.25rem; border-radius: 0.75rem;
+  background: rgb(155 208 74 / 0.15); color: $color-foreground;
+  font-weight: 600; font-size: 0.875rem; text-decoration: none;
+  transition: all 0.3s ease;
+  &:hover { background: rgb(155 208 74 / 0.25); transform: translateY(-2px); }
+}
+
+// ─── Responsive ───
+@include mobile {
+  .stats-band { background: linear-gradient(135deg, #9bd04a 0%, #aae199 100%); }
+  .coverage__map-pulse { display: none; }
+  .helpdesk__category:hover { transform: none; }
+  .service-card:hover { transform: none; }
+  .contact__card:hover { transform: none; }
+}

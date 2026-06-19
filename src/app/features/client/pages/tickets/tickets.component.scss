@@ -1,0 +1,23 @@
+@use '../../../../../assets/styles/variables' as *;
+
+.page {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.page__header {
+  margin-bottom: 2rem;
+}
+
+.page__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-foreground;
+  margin: 0;
+}
+
+.page__subtitle {
+  margin-top: 0.25rem;
+  color: $color-muted-foreground;
+  font-size: 0.875rem;
+}

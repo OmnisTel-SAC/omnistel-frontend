@@ -1,0 +1,173 @@
+<div class="detail-page">
+  <p-confirmDialog />
+  <div class="detail-back">
+    <a [routerLink]="['/admin/tickets']" class="detail-back__link">
+      <i class="pi pi-arrow-left"></i> Volver a Tickets
+    </a>
+  </div>
+
+  @if (loading() && !ticket()) {
+    <div class="detail-loading">
+      <p-skeleton width="100%" height="40px" />
+      <p-skeleton width="60%" height="200px" />
+      <p-skeleton width="100%" height="300px" />
+    </div>
+  } @else if (ticket(); as t) {
+    <div class="detail-container">
+      <div class="detail-main">
+        <div class="detail-header">
+          <div class="detail-header__info">
+            <h1 class="detail-header__title">{{ t.title }}</h1>
+            <span class="detail-header__id">#{{ t.id }}</span>
+          </div>
+          <div class="detail-header__badges">
+            <p-tag [value]="getStatusLabel(t.status)" [severity]="getStatusSeverity(t.status)" />
+            <p-tag [value]="getPriorityLabel(t.priority)" [severity]="getPrioritySeverity(t.priority)" />
+          </div>
+        </div>
+
+        <div class="detail-actions">
+          @if (t.status === 'OPEN' || t.status === 'REOPENED') {
+            <button pButton type="button" label="Asignar a agente" icon="pi pi-user-plus" class="detail-action-btn detail-action-btn--assign" (click)="openAssignDialog()"></button>
+          }
+          @if (t.status === 'ASSIGNED') {
+            <button pButton type="button" label="En Progreso" icon="pi pi-play" class="detail-action-btn detail-action-btn--progress" (click)="updateStatus('IN_PROGRESS')"></button>
+            <button pButton type="button" label="Reasignar" icon="pi pi-user-edit" class="p-button-outlined" (click)="openAssignDialog()"></button>
+          }
+          @if (t.status === 'IN_PROGRESS') {
+            <button pButton type="button" label="Resolver" icon="pi pi-check" class="detail-action-btn detail-action-btn--resolve" (click)="updateStatus('RESOLVED')"></button>
+          }
+        </div>
+
+        <div class="detail-section">
+          <h3 class="detail-section__title">Descripción</h3>
+          <div class="detail-description">{{ t.description || 'Sin descripción adicional.' }}</div>
+        </div>
+
+        <div class="detail-section">
+          <h3 class="detail-section__title">Historial</h3>
+          <div class="detail-timeline-wrapper">
+            <p-timeline [value]="timelineEvents()" align="alternate">
+              <ng-template pTemplate="marker" let-event>
+                <span class="detail-timeline-marker" [style.background]="event.color || '#9CA3AF'">
+                  <i [class]="event.icon"></i>
+                </span>
+              </ng-template>
+              <ng-template pTemplate="content" let-event>
+                <div class="detail-timeline-card" [class.detail-timeline-card--comment]="event.type === 'comment'">
+                  <div class="detail-timeline-card__header">
+                    <div>
+                      <span class="detail-timeline-card__title">{{ event.title }}</span>
+                      <span class="detail-timeline-card__date">{{ event.date | date:'dd/MM/yyyy HH:mm' }}</span>
+                    </div>
+                  </div>
+                  @if (event.description) {
+                    <p class="detail-timeline-card__desc">{{ event.description }}</p>
+                  }
+                </div>
+              </ng-template>
+            </p-timeline>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-sidebar">
+        <div class="detail-sidebar-card">
+          <h3 class="detail-sidebar-card__title">Información del Ticket</h3>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Cliente</span>
+            <span class="detail-sidebar-card__value">
+              @if (client(); as c) {
+                {{ c.firstName }} {{ c.lastName }}
+              } @else {
+                Cliente #{{ t.clientId }}
+              }
+            </span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Email cliente</span>
+            <span class="detail-sidebar-card__value">{{ client()?.email || '—' }}</span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Ticket ID</span>
+            <span class="detail-sidebar-card__value">#{{ t.id }}</span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Categoría</span>
+            <span class="detail-sidebar-card__category">{{ getCategoryLabel(t.category) }}</span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Creado</span>
+            <span class="detail-sidebar-card__value">{{ t.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Actualizado</span>
+            <span class="detail-sidebar-card__value">{{ t.updatedAt ? (t.updatedAt | date:'dd/MM/yyyy HH:mm') : '—' }}</span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Estado</span>
+            <p-tag [value]="getStatusLabel(t.status)" [severity]="getStatusSeverity(t.status)" />
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Agente Asignado</span>
+            <span class="detail-sidebar-card__value">
+              @if (agent(); as a) {
+                {{ a.firstName }} {{ a.lastName }}
+              } @else if (t.agentId) {
+                Cargando...
+              } @else {
+                <span class="detail-sidebar-card__unassigned">Sin asignar</span>
+              }
+            </span>
+          </div>
+        </div>
+
+        @if (t.status === 'RESOLVED') {
+          <div class="detail-resolved-box">
+            <i class="pi pi-check-circle" style="color: #10B981; font-size: 1.5rem;"></i>
+            <span>Este ticket ha sido resuelto</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
+
+<p-dialog
+  header="Asignar ticket #{{ ticket()?.id }}"
+  [modal]="true"
+  [(visible)]="showAssignDialog"
+  [style]="{ width: '420px' }"
+>
+  <div class="assign-dialog">
+    <p class="assign-dialog__label">Selecciona un agente:</p>
+    <p-select
+      [options]="agentOptions()"
+      optionLabel="fullName"
+      placeholder="Seleccionar agente..."
+      styleClass="assign-dialog__select"
+      [(ngModel)]="selectedAgent"
+      [appendTo]="'body'"
+    />
+  </div>
+  <ng-template pTemplate="footer">
+    <button pButton type="button" label="Cancelar" class="p-button-text" (click)="showAssignDialog.set(false)"></button>
+    <button
+      pButton
+      type="button"
+      label="Asignar"
+      icon="pi pi-check"
+      [disabled]="!selectedAgent() || assigning()"
+      [loading]="assigning()"
+      (click)="confirmAssign()"
+    ></button>
+  </ng-template>
+</p-dialog>

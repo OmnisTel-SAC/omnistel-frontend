@@ -1,0 +1,99 @@
+<div class="queue-page">
+  <p-confirmDialog />
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">Cola de Tickets</h1>
+      <p class="page-header__subtitle">Tickets abiertos pendientes de asignación a un agente.</p>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <p-skeleton height="400px" styleClass="queue-skeleton" />
+  } @else if (tickets().length === 0) {
+    <div class="queue-empty">
+      <i class="pi pi-inbox queue-empty__icon"></i>
+      <p class="queue-empty__text">No hay tickets en cola. Todos los tickets han sido asignados.</p>
+    </div>
+  } @else {
+    <div class="page-card">
+      <p-table [value]="tickets()" [tableStyle]="{ 'min-width': '60rem' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Prioridad</th>
+            <th>Categoría</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th style="width: 120px;">Acción</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-ticket>
+          <tr class="queue-row">
+            <td>
+              <a [routerLink]="['/admin/tickets', ticket.id]" class="queue-link">#{{ ticket.id }}</a>
+            </td>
+            <td>
+              <span class="queue-title-cell" [pTooltip]="ticket.title" tooltipPosition="top">
+                {{ ticket.title }}
+              </span>
+            </td>
+            <td>
+              <p-tag [value]="getPriorityLabel(ticket.priority)" [severity]="getPrioritySeverity(ticket.priority)" />
+            </td>
+            <td><span class="queue-category-tag">{{ getCategoryLabel(ticket.category) }}</span></td>
+            <td>{{ getClientName(ticket.clientId) }}</td>
+            <td class="queue-date">{{ ticket.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              <button
+                pButton
+                type="button"
+                label="Asignar"
+                icon="pi pi-user-plus"
+                class="queue-assign-btn"
+                (click)="openAssignDialog(ticket)"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  }
+
+  <p-dialog
+    header="Asignar ticket #{{ selectedTicket()?.id }}"
+    [modal]="true"
+    [(visible)]="showAssignDialog"
+    [style]="{ width: '420px' }"
+  >
+    <div class="assign-dialog">
+      <p class="assign-dialog__label">Selecciona un agente para asignar este ticket:</p>
+      <p-select
+        [options]="agentOptions()"
+        optionLabel="fullName"
+        placeholder="Seleccionar agente..."
+        styleClass="assign-dialog__select"
+        [(ngModel)]="selectedAgent"
+        [appendTo]="'body'"
+      />
+    </div>
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        type="button"
+        label="Cancelar"
+        class="p-button-text"
+        (click)="showAssignDialog.set(false)"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Asignar"
+        icon="pi pi-check"
+        [disabled]="!selectedAgent() || assigning()"
+        [loading]="assigning()"
+        (click)="confirmAssign()"
+      ></button>
+    </ng-template>
+  </p-dialog>
+</div>

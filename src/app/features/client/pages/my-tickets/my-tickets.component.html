@@ -1,0 +1,95 @@
+<div class="my-tickets-page">
+  <div class="my-tickets-card">
+    <div class="my-tickets-header">
+      <div>
+        <h1 class="my-tickets-header__title">Mis Tickets</h1>
+        <p class="my-tickets-header__subtitle">Gestiona y da seguimiento a tus tickets de soporte</p>
+      </div>
+    </div>
+
+    @if (loading() && tickets().length === 0) {
+      <div class="my-tickets-skeleton">
+        @for (item of [1,2,3,4,5]; track item) {
+          <div class="my-tickets-skeleton__row">
+            <p-skeleton width="60px" height="20px" />
+            <p-skeleton width="40%" height="20px" />
+            <p-skeleton width="100px" height="20px" />
+            <p-skeleton width="80px" height="20px" />
+            <p-skeleton width="100px" height="20px" />
+            <p-skeleton width="120px" height="20px" />
+          </div>
+        }
+      </div>
+    } @else if (tickets().length === 0) {
+      <div class="my-tickets-empty">
+        <i class="pi pi-inbox my-tickets-empty__icon"></i>
+        <h3 class="my-tickets-empty__title">No tienes tickets creados</h3>
+        <p class="my-tickets-empty__desc">Crea tu primer ticket para comenzar</p>
+        <button
+          pButton
+          label="Crear Ticket"
+          icon="pi pi-plus"
+          class="my-tickets-empty__btn"
+          routerLink="/client/create-ticket"
+        ></button>
+      </div>
+    } @else {
+      <p-table
+        [value]="tickets()"
+        [lazy]="true"
+        [totalRecords]="totalRecords()"
+        [loading]="loading()"
+        dataKey="id"
+        [paginator]="true"
+        [rows]="size()"
+        [pageLinks]="5"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        (onPage)="onPageChange($event)"
+        styleClass="my-tickets-table"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="id"># ID <p-sortIcon field="id" /></th>
+            <th pSortableColumn="title">Título <p-sortIcon field="title" /></th>
+            <th pSortableColumn="category">Categoría <p-sortIcon field="category" /></th>
+            <th pSortableColumn="priority">Prioridad <p-sortIcon field="priority" /></th>
+            <th pSortableColumn="status">Estado <p-sortIcon field="status" /></th>
+            <th pSortableColumn="createdAt">Fecha <p-sortIcon field="createdAt" /></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-ticket>
+          <tr class="my-tickets-table__row" (click)="onRowClick(ticket)">
+            <td>
+              <a class="my-tickets-table__id" [routerLink]="['/client/tickets', ticket.id]">
+                #{{ ticket.id }}
+              </a>
+            </td>
+            <td [pTooltip]="ticket.title" tooltipPosition="top">
+              {{ truncate(ticket.title, 50) }}
+            </td>
+            <td>
+              <span [style]="getCategoryStyle()">{{ getCategoryLabel(ticket.category) }}</span>
+            </td>
+            <td>
+              <p-tag
+                [value]="ticket.priority | priorityLabel"
+                [severity]="getPrioritySeverity(ticket.priority)"
+                styleClass="my-tickets-table__tag"
+              />
+            </td>
+            <td>
+              <p-tag
+                [value]="getStatusLabel(ticket.status)"
+                [severity]="getStatusSeverity(ticket.status)"
+                styleClass="my-tickets-table__tag"
+              />
+            </td>
+            <td class="my-tickets-table__date">
+              {{ ticket.createdAt | date:'dd/MM/yyyy HH:mm' }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    }
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<div class="login-page">
+  <div class="login-panel">
+    <div class="login-panel__bg"></div>
+    <a routerLink="/" class="login-panel__logo">
+      <img class="login-panel__logo-img" src="img/landing/Omnistel_logo_blanco.png" alt="OmnisTel" />
+    </a>
+    <div class="login-panel__content">
+      <h2 class="login-panel__title">Bienvenido<br/>de vuelta</h2>
+      <p class="login-panel__desc">Accede a tu panel de OmnisTel y gestiona tus tickets de soporte de forma rápida y trazable.</p>
+      <ul class="login-panel__list">
+        <li><i class="pi pi-check-circle"></i> <span>Soporte 24/7 para tu negocio</span></li>
+        <li><i class="pi pi-check-circle"></i> <span>Seguimiento en tiempo real</span></li>
+        <li><i class="pi pi-check-circle"></i> <span>SLA garantizado del 99.9%</span></li>
+      </ul>
+    </div>
+    <div class="login-panel__footer">&copy; 2026 OmnisTel S.A.C.</div>
+  </div>
+
+  <div class="login-form-panel">
+    <div class="login-form" [class.shake]="shaking()">
+      <div class="login-form__mobile-logo">
+        <img class="login-form__mobile-logo-img" src="img/landing/Omnistel_logo_blanco.png" alt="OmnisTel" />
+      </div>
+      <h1 class="login-form__title">Iniciar Sesión</h1>
+      <p class="login-form__sub">Accede a tu panel de OmnisTel</p>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form__fields" novalidate>
+        <div class="field">
+          <label class="field__label">Usuario</label>
+          <div class="field__input-wrapper">
+            <i class="pi pi-user field__icon"></i>
+            <input class="field__input" [class.field__input--error]="loginForm.get('username')?.touched && loginForm.get('username')?.invalid" [class.field__input--valid]="loginForm.get('username')?.touched && loginForm.get('username')?.valid" formControlName="username" type="text" placeholder="tu_usuario" />
+            @if (loginForm.get('username')?.touched && loginForm.get('username')?.invalid) {
+              <i class="pi pi-exclamation-circle field__icon-right--error"></i>
+            } @else if (loginForm.get('username')?.touched && loginForm.get('username')?.valid) {
+              <i class="pi pi-check-circle field__icon-right--valid"></i>
+            }
+          </div>
+          @if (loginForm.get('username')?.touched && loginForm.get('username')?.invalid) {
+            <p class="field__error"><i class="pi pi-exclamation-circle"></i> Mínimo 3 caracteres</p>
+          } @else {
+            <p class="field__hint">Ingresa tu nombre de usuario</p>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label">Contraseña</label>
+          <div class="field__input-wrapper">
+            <i class="pi pi-lock field__icon"></i>
+            <input class="field__input" [class.field__input--error]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" [class.field__input--valid]="loginForm.get('password')?.touched && loginForm.get('password')?.valid" [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="••••••••" />
+            <button type="button" class="field__toggle" (click)="showPassword = !showPassword">
+              <i class="pi {{ showPassword ? 'pi-eye-slash' : 'pi-eye' }}"></i>
+            </button>
+          </div>
+          @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+            <p class="field__error"><i class="pi pi-exclamation-circle"></i> Mínimo 6 caracteres</p>
+          }
+        </div>
+
+        <button type="submit" class="login-form__submit" [disabled]="loading()">
+          @if (loading()) {
+            <i class="pi pi-spin pi-spinner"></i> Ingresando&hellip;
+          } @else {
+            Ingresar <i class="pi pi-arrow-right"></i>
+          }
+        </button>
+
+        <p class="login-form__switch">
+          ¿No tienes cuenta? <a routerLink="/register">Regístrate</a>
+        </p>
+      </form>
+
+
+    </div>
+  </div>
+</div>

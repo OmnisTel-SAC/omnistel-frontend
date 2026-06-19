@@ -1,0 +1,178 @@
+<div class="dashboard-page">
+  <p-toast position="top-right" />
+
+  <!-- ─── HEADER ─── -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-header__title">Dashboard</h1>
+    <p class="dashboard-header__subtitle">
+      Bienvenido, {{ authStore.user()?.firstName }} {{ authStore.user()?.lastName }}. Aquí está el resumen de tu actividad.
+    </p>
+  </div>
+
+  <!-- ─── KPI CARDS ─── -->
+  @if (loading()) {
+    <div class="dashboard-kpis">
+      @for (item of [1,2,3,4]; track item) {
+        <div class="dashboard-kpi-card">
+          <p-skeleton width="40px" height="40px" styleClass="dashboard-kpi-card__sk-icon" />
+          <p-skeleton width="60%" height="28px" styleClass="dashboard-kpi-card__sk-value" />
+          <p-skeleton width="80%" height="14px" styleClass="dashboard-kpi-card__sk-label" />
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="dashboard-kpis">
+      <a class="dashboard-kpi-card dashboard-kpi-card--link" routerLink="/agent/tickets">
+        <div class="dashboard-kpi-card__icon dashboard-kpi-card__icon--queue">
+          <i class="pi pi-inbox"></i>
+        </div>
+        <div class="dashboard-kpi-card__value">{{ queuedCount() }}</div>
+        <div class="dashboard-kpi-card__label">En Cola</div>
+      </a>
+
+      <a class="dashboard-kpi-card dashboard-kpi-card--link" routerLink="/agent/assigned">
+        <div class="dashboard-kpi-card__icon dashboard-kpi-card__icon--assigned">
+          <i class="pi pi-user"></i>
+        </div>
+        <div class="dashboard-kpi-card__value">{{ assignedCount() }}</div>
+        <div class="dashboard-kpi-card__label">Mis Asignados</div>
+      </a>
+
+      <div class="dashboard-kpi-card">
+        <div class="dashboard-kpi-card__icon dashboard-kpi-card__icon--progress">
+          <i class="pi pi-spinner"></i>
+        </div>
+        <div class="dashboard-kpi-card__value">{{ inProgressCount() }}</div>
+        <div class="dashboard-kpi-card__label">En Progreso</div>
+      </div>
+
+      <div class="dashboard-kpi-card">
+        <div class="dashboard-kpi-card__icon dashboard-kpi-card__icon--resolved">
+          <i class="pi pi-check-circle"></i>
+        </div>
+        <div class="dashboard-kpi-card__value">{{ resolvedToday().length }}</div>
+        <div class="dashboard-kpi-card__label">Resueltos Hoy</div>
+      </div>
+    </div>
+  }
+
+  <!-- ─── BOTTOM SECTION (2 columns) ─── -->
+  <div class="dashboard-grid">
+    <!-- ─── LEFT COLUMN: Critical tickets ─── -->
+    <div class="dashboard-card">
+      <div class="dashboard-card__header">
+        <h2 class="dashboard-card__title">
+          <i class="pi pi-exclamation-triangle" style="color: #EF4444;"></i>
+          Tickets Críticos en Cola
+        </h2>
+        <span class="dashboard-card__subtitle">Prioridad Alta / Crítica</span>
+      </div>
+
+      @if (loadingQueue()) {
+        @for (item of [1,2,3]; track item) {
+          <div class="dashboard-card__skeleton-row">
+            <p-skeleton width="100%" height="80px" />
+          </div>
+        }
+      } @else if (criticalTickets().length === 0) {
+        <div class="dashboard-card__empty">
+          <i class="pi pi-check-circle dashboard-card__empty-icon"></i>
+          <p>No hay tickets críticos en cola.</p>
+        </div>
+      } @else {
+        <div class="critical-list">
+          @for (ticket of criticalTickets(); track ticket.id) {
+            <div class="critical-item">
+              <div class="critical-item__main">
+                <a class="critical-item__id" [routerLink]="['/agent/tickets', ticket.id]">#{{ ticket.id }}</a>
+                <span class="critical-item__title">{{ ticket.title }}</span>
+                <p-tag
+                  [value]="ticket.priority | priorityLabel"
+                  [severity]="getPrioritySeverity(ticket.priority)"
+                  styleClass="critical-item__tag"
+                />
+              </div>
+              <div class="critical-item__meta">
+                <span class="critical-item__client">Cliente: {{ ticket.clientId }}</span>
+                <span class="critical-item__cat">{{ getCategoryLabel(ticket.category) }}</span>
+                <span class="critical-item__date">{{ ticket.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+              <div class="critical-item__action">
+                <button
+                  pButton
+                  icon="pi pi-arrow-right"
+                  label="Tomar Ticket"
+                  class="p-button-sm p-button-success"
+                  (click)="confirmTakeTicket(ticket)"
+                ></button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <a class="dashboard-card__more" routerLink="/agent/tickets">
+          Ver todos los tickets en cola →
+        </a>
+      }
+    </div>
+
+    <!-- ─── RIGHT COLUMN ─── -->
+    <div class="dashboard-right">
+      <!-- ─── Chart ─── -->
+      <div class="dashboard-card">
+        <div class="dashboard-card__header">
+          <h2 class="dashboard-card__title">
+            <i class="pi pi-chart-pie"></i>
+            Distribución por Estado
+          </h2>
+        </div>
+
+        @if (loading()) {
+          <p-skeleton width="100%" height="220px" borderRadius="12px" />
+        } @else {
+          <div class="chart-wrapper">
+            <p-chart type="doughnut" [data]="chartData()" [options]="chartOptions" />
+          </div>
+        }
+      </div>
+
+      <!-- ─── Resolved today ─── -->
+      <div class="dashboard-card">
+        <div class="dashboard-card__header">
+          <h2 class="dashboard-card__title">
+            <i class="pi pi-check-circle" style="color: #10B981;"></i>
+            Resueltos Hoy
+          </h2>
+        </div>
+
+        @if (loadingAssigned()) {
+          @for (item of [1,2,3]; track item) {
+            <div class="dashboard-card__skeleton-row">
+              <p-skeleton width="100%" height="24px" />
+            </div>
+          }
+        } @else if (resolvedToday().length === 0) {
+          <div class="dashboard-card__empty">
+            <i class="pi pi-inbox dashboard-card__empty-icon"></i>
+            <p>No hay tickets resueltos hoy.</p>
+          </div>
+        } @else {
+          <div class="resolved-list">
+            @for (ticket of resolvedToday(); track ticket.id) {
+              <a class="resolved-item" [routerLink]="['/agent/tickets', ticket.id]">
+                <i class="pi pi-check-circle resolved-item__icon"></i>
+                <div class="resolved-item__info">
+                  <span class="resolved-item__id">#{{ ticket.id }}</span>
+                  <span class="resolved-item__title">- {{ ticket.title }}</span>
+                </div>
+                <span class="resolved-item__time">{{ ticket.resolvedAt | date:'HH:mm' }}</span>
+              </a>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <p-confirmDialog />
+</div>

@@ -1,0 +1,94 @@
+// ─── Overrides PrimeNG Theme ───
+
+.p-button {
+  &.p-button-primary {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-dark);
+    &:hover { background: color-mix(in srgb, var(--color-primary), black 15%); border-color: color-mix(in srgb, var(--color-primary), black 15%); }
+  }
+}
+
+.p-tag {
+  font-size: 0.8rem;
+  font-weight: 500;
+
+  &.p-tag-success {
+    background: #15803d !important;
+    color: #ffffff !important;
+  }
+  &.p-tag-info {
+    background: #2563eb !important;
+    color: #ffffff !important;
+  }
+  &.p-tag-warn {
+    background: #b45309 !important;
+    color: #ffffff !important;
+  }
+  &.p-tag-danger {
+    background: #b91c1c !important;
+    color: #ffffff !important;
+  }
+
+  .p-tag-value {
+    font-weight: 500;
+  }
+}
+
+.p-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.p-datatable .p-datatable-header {
+  background: transparent;
+  border: none;
+  padding: 1rem 0;
+}
+
+.p-dialog {
+  background: #ffffff !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+
+  .p-dialog-header {
+    background: #ffffff !important;
+    border-bottom: 1px solid #e5e7eb;
+    border-radius: 16px 16px 0 0;
+    padding: 1.25rem 1.5rem 0.75rem;
+
+    .p-dialog-title {
+      color: #1f2937 !important;
+      font-weight: 600 !important;
+      font-size: 1.125rem !important;
+    }
+  }
+
+  .p-dialog-content {
+    background: #ffffff !important;
+    color: #374151 !important;
+    padding: 1rem 1.5rem !important;
+    font-size: 0.9375rem !important;
+    line-height: 1.5 !important;
+  }
+
+  .p-dialog-footer {
+    background: #ffffff !important;
+    border-top: none;
+    border-radius: 0 0 16px 16px;
+    padding: 0.75rem 1.5rem 1.25rem !important;
+
+    .p-button {
+      border-radius: 50px !important;
+      font-weight: 500 !important;
+    }
+  }
+}
+
+.p-dialog-mask {
+  background: rgba(0, 0, 0, 0.35) !important;
+  backdrop-filter: blur(2px);
+}
+
+.p-dropdown { width: 100%; }
+.p-inputtext { width: 100%; }

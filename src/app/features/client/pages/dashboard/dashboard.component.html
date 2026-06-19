@@ -1,0 +1,115 @@
+<div class="dashboard-page">
+  <div class="dashboard-header">
+    <h1 class="dashboard-header__title">Dashboard</h1>
+    <p class="dashboard-header__subtitle">Bienvenido, {{ authStore.user()?.firstName }}. Aquí tienes un resumen de tus tickets.</p>
+  </div>
+
+  @if (loading()) {
+    <div class="dashboard-kpis">
+      @for (_ of [1,2,3]; track $index) {
+        <p-skeleton height="120px" styleClass="dashboard-skeleton-card" />
+      }
+    </div>
+    <div class="dashboard-charts">
+      <p-skeleton height="280px" styleClass="dashboard-skeleton-card" />
+      <p-skeleton height="280px" styleClass="dashboard-skeleton-card" />
+    </div>
+    <p-skeleton height="300px" styleClass="dashboard-skeleton-card" />
+  } @else {
+    <div class="dashboard-kpis">
+      <div class="kpi-card">
+        <div class="kpi-card__icon kpi-card__icon--blue">
+          <i class="pi pi-ticket"></i>
+        </div>
+        <div class="kpi-card__info">
+          <span class="kpi-card__number">{{ totalTickets() }}</span>
+          <span class="kpi-card__label">Total creados</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-card__icon kpi-card__icon--orange">
+          <i class="pi pi-clock"></i>
+        </div>
+        <div class="kpi-card__info">
+          <span class="kpi-card__number">{{ openTickets() }}</span>
+          <span class="kpi-card__label">Tickets Activos</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-card__icon kpi-card__icon--green">
+          <i class="pi pi-check-circle"></i>
+        </div>
+        <div class="kpi-card__info">
+          <span class="kpi-card__number">{{ resolvedThisMonth() }}</span>
+          <span class="kpi-card__label">Resueltos este mes</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-charts">
+      <div class="chart-card">
+        <h3 class="chart-card__title">Distribución por Estado</h3>
+        <div class="chart-card__wrapper">
+          <p-chart type="doughnut" [data]="statusChartData()" [options]="doughnutOptions" />
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3 class="chart-card__title">Tickets por Categoría</h3>
+        <div class="chart-card__wrapper">
+          <p-chart type="bar" [data]="categoryChartData()" [options]="barOptions" />
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <h3 class="table-card__title">{{ tableTitle }}</h3>
+
+      @if (tableData().length === 0) {
+        <div class="table-card__empty">
+          <i class="pi pi-inbox table-card__empty-icon"></i>
+          <p class="table-card__empty-text">No hay tickets aún. Crea tu primer ticket para empezar.</p>
+        </div>
+      } @else {
+        <p-table [value]="tableData()" [tableStyle]="{ 'min-width': '50rem' }">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Categoría</th>
+              <th>Prioridad</th>
+              <th>Fecha</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-ticket>
+            <tr class="table-card__row">
+              <td>
+                <a [routerLink]="['/client/tickets', ticket.id]" class="table-card__link">
+                  #{{ ticket.id }}
+                </a>
+              </td>
+              <td>
+                <span class="table-card__title-cell" [pTooltip]="ticket.title" tooltipPosition="top">
+                  {{ ticket.title }}
+                </span>
+              </td>
+              <td>
+                <span class="table-card__category-tag">{{ getCategoryLabel(ticket.category) }}</span>
+              </td>
+              <td>
+                <p-tag
+                  [value]="getPriorityLabel(ticket.priority)"
+                  [severity]="getPrioritySeverity(ticket.priority)"
+                  styleClass="table-card__priority-tag"
+                />
+              </td>
+              <td class="table-card__date">{{ ticket.createdAt | date:'dd/MM/yyyy' }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    </div>
+  }
+</div>

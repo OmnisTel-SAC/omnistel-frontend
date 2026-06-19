@@ -1,0 +1,242 @@
+<div class="detail-page">
+  <p-confirmDialog />
+  @if (loading() && !ticket()) {
+    <div class="detail-loading">
+      <p-skeleton width="100%" height="40px" />
+      <p-skeleton width="60%" height="200px" />
+      <p-skeleton width="100%" height="300px" />
+    </div>
+  } @else if (ticket(); as t) {
+    <div class="detail-container">
+      <div class="detail-main">
+        <div class="detail-header">
+          <div class="detail-header__info">
+            <h1 class="detail-header__title">{{ t.title }}</h1>
+            <span class="detail-header__id">#{{ t.id }}</span>
+          </div>
+          <div class="detail-header__badges">
+            <p-tag
+              [value]="getStatusLabel(t.status)"
+              [severity]="getStatusSeverity(t.status)"
+              styleClass="detail-badge"
+            />
+            <p-tag
+              [value]="getPriorityLabel(t.priority)"
+              [severity]="getPrioritySeverity(t.priority)"
+              styleClass="detail-badge"
+            />
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3 class="detail-section__title">Descripción del problema</h3>
+          <div class="detail-description">
+            {{ t.description || 'Sin descripción adicional.' }}
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3 class="detail-section__title">Historial</h3>
+          <div class="detail-timeline-wrapper">
+            <p-timeline [value]="timelineEvents()" align="alternate">
+              <ng-template pTemplate="marker" let-event>
+                <span
+                  class="detail-timeline-marker"
+                  [style.background]="event.color || '#C4D2B9'"
+                >
+                  <i [class]="event.icon"></i>
+                </span>
+              </ng-template>
+              <ng-template pTemplate="content" let-event>
+                <div
+                  class="detail-timeline-card"
+                  [class.detail-timeline-card--comment]="event.type === 'comment'"
+                  [style.--card-accent]="event.type === 'comment' ? (event.userRole === 'CLIENT' ? '#B8CCA8' : '#E8F4F8') : 'transparent'"
+                >
+                  <div class="detail-timeline-card__header">
+                    @if (event.type === 'comment') {
+                      <span
+                        class="detail-timeline-avatar"
+                        [style.background]="getAvatarColor(event.userRole || '')"
+                      >
+                        {{ getUserInitials(event.userRole || '') }}
+                      </span>
+                    }
+                    <div>
+                      <span class="detail-timeline-card__title">{{ event.title }}</span>
+                      <span class="detail-timeline-card__date">{{ event.date | date:'dd/MM/yyyy HH:mm' }}</span>
+                    </div>
+                  </div>
+                  @if (event.description) {
+                    <p class="detail-timeline-card__desc">{{ event.description }}</p>
+                  }
+                </div>
+              </ng-template>
+            </p-timeline>
+          </div>
+        </div>
+
+        @if (canComment()) {
+          <div class="detail-section">
+            <h3 class="detail-section__title">Responder al ticket</h3>
+            <div class="detail-comment-form">
+              <textarea
+                pTextarea
+                rows="3"
+                class="detail-comment-form__input"
+                placeholder="Escribe tu respuesta o comentario..."
+                [formControl]="commentForm.controls.message"
+              ></textarea>
+              <div class="detail-comment-form__actions">
+                <button
+                  pButton
+                  type="button"
+                  label="Enviar"
+                  icon="pi pi-send"
+                  class="detail-comment-form__btn"
+                  [disabled]="commentForm.invalid || submitting()"
+                  [loading]="submitting()"
+                  (click)="onSubmitComment()"
+                ></button>
+              </div>
+            </div>
+          </div>
+        } @else if (isResolved()) {
+          <div class="detail-resolved-banner">
+            <i class="pi pi-check-circle detail-resolved-banner__icon"></i>
+            <div>
+              <p class="detail-resolved-banner__text">Este ticket ha sido resuelto.</p>
+              <p class="detail-resolved-banner__sub">Si necesitas más ayuda, crea un nuevo ticket.</p>
+            </div>
+            <button
+              pButton
+              label="Crear nuevo ticket"
+              icon="pi pi-plus"
+              class="detail-resolved-banner__btn"
+              routerLink="/client/create-ticket"
+            ></button>
+          </div>
+        } @else if (ticket()?.status === 'IN_PROGRESS') {
+          <div class="detail-open-notice">
+            <i class="pi pi-clock detail-open-notice__icon"></i>
+            <span>El agente aún no ha respondido. Espera su mensaje para poder comentar.</span>
+          </div>
+        } @else {
+          <div class="detail-open-notice">
+            <i class="pi pi-clock detail-open-notice__icon"></i>
+            <span>El ticket está pendiente de asignación. Podrás responder cuando un agente lo tome.</span>
+          </div>
+        }
+      </div>
+
+      <div class="detail-sidebar">
+        <div class="detail-sidebar-card">
+          <h3 class="detail-sidebar-card__title">Información del Ticket</h3>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Cliente</span>
+            <span class="detail-sidebar-card__value">
+              {{ authStore.user()?.firstName }} {{ authStore.user()?.lastName }}
+            </span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Email</span>
+            <span class="detail-sidebar-card__value">{{ authStore.user()?.email }}</span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Ticket ID</span>
+            <span class="detail-sidebar-card__value">#{{ t.id }}</span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Categoría</span>
+            <span class="detail-sidebar-card__category">{{ getCategoryLabel(t.category) }}</span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Creado</span>
+            <span class="detail-sidebar-card__value">{{ t.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Actualizado</span>
+            <span class="detail-sidebar-card__value">
+              {{ t.updatedAt ? (t.updatedAt | date:'dd/MM/yyyy HH:mm') : 'Sin actualizaciones' }}
+            </span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Estado</span>
+            <p-tag
+              [value]="getStatusLabel(t.status)"
+              [severity]="getStatusSeverity(t.status)"
+              styleClass="detail-badge"
+            />
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Agente Asignado</span>
+            <span class="detail-sidebar-card__value">
+              @if (agent(); as a) {
+                {{ a.firstName }} {{ a.lastName }}
+              } @else if (t.agentId) {
+                Cargando...
+              } @else {
+                <span class="detail-sidebar-card__unassigned">Sin asignar</span>
+              }
+            </span>
+          </div>
+        </div>
+
+        @if (isResolved()) {
+          <div class="detail-resolved-box">
+            <i class="pi pi-check-circle" style="color: #27ae60; font-size: 1.5rem;"></i>
+            <span>Este ticket ha sido resuelto</span>
+          </div>
+        }
+
+        <div class="detail-sidebar-card">
+          <h3 class="detail-sidebar-card__title">Archivos Adjuntos</h3>
+          @if (attachments().length === 0) {
+            <p class="detail-sidebar-card__empty">No hay archivos adjuntos</p>
+          } @else {
+            <div class="detail-attachments">
+              @for (att of attachments(); track att.id) {
+                <div class="detail-attachment-item">
+                  @if (isImageFile(att.fileName)) {
+                    @if (imageBlobUrls().get(att.id); as imgUrl) {
+                      <img
+                        [src]="imgUrl"
+                        [alt]="att.fileName"
+                        class="detail-attachment-item__image"
+                        (error)="markImageBroken(att)"
+                        [pTooltip]="att.fileName"
+                      />
+                    } @else if (isBroken(att)) {
+                      <div class="detail-attachment-item__file">
+                        <i class="pi pi-file"></i>
+                      </div>
+                    } @else {
+                      <div class="detail-attachment-item__loading">
+                        <i class="pi pi-spin pi-spinner"></i>
+                      </div>
+                    }
+                  } @else {
+                    <div class="detail-attachment-item__file">
+                      <i class="pi pi-file"></i>
+                    </div>
+                  }
+                  <span class="detail-attachment-item__name">{{ att.fileName }}</span>
+                </div>
+              }
+            </div>
+          }
+
+
+        </div>
+      </div>
+    </div>
+  }
+</div>

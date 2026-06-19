@@ -1,0 +1,233 @@
+@use '../../../../../assets/styles/variables' as *;
+
+.sidebar-wrapper {
+  position: fixed;
+  left: -280px;
+  top: 8px;
+  z-index: 40;
+  height: calc(100vh - 16px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: left 0.3s ease;
+
+  &--open {
+    left: 8px;
+  }
+
+  @include desktop {
+    left: 8px;
+  }
+}
+
+.sidebar__overlay {
+  @include desktop { display: none; }
+  position: fixed; inset: 0; z-index: -1;
+  background: rgb(0 0 0 / 0.5);
+  display: none;
+
+  .sidebar-wrapper--open & {
+    display: block;
+  }
+}
+
+.sidebar-main {
+  flex: 1;
+  width: 260px;
+  border-radius: 30px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #000000 15%, #898B87 100%);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar__logo-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.sidebar__logo {
+  width: 130px;
+  height: auto;
+  display: block;
+}
+
+.sidebar__divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 24px;
+}
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sidebar__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 50px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  &--active {
+    background: linear-gradient(90deg, #7E8975 0%, #B8CCA8 100%);
+    color: #ffffff;
+    box-shadow: 0 10px 60px rgba(184, 204, 168, 0.2);
+
+    &:hover { color: #ffffff; }
+  }
+}
+
+.sidebar__item-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: transparent;
+  transition: background 0.3s ease;
+
+  .sidebar__item--active & {
+    background: #C4D2B9;
+  }
+}
+
+.sidebar__item-icon {
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.sidebar__item-label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar__item-arrow {
+  font-size: 0.75rem;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.sidebar__user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.sidebar__user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #FF795E;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.sidebar__user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar__user-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar__user-role {
+  font-size: 0.6875rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.sidebar-logout {
+  width: 260px;
+  border-radius: 30px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #6D6C6C 0%, #989898 100%);
+  padding: 12px 16px;
+}
+
+.sidebar-logout__btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 50px;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+
+  &:hover {
+    opacity: 0.9;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.sidebar-logout__icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #C4D2B9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar-logout__icon {
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .sidebar-main {
+    border-radius: 20px;
+  }
+
+  .sidebar-logout {
+    border-radius: 20px;
+  }
+
+  .sidebar-wrapper {
+    left: -280px;
+
+    &--open { left: 0px; }
+  }
+}

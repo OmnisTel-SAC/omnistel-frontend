@@ -1,0 +1,144 @@
+<div class="dashboard-page">
+  <div class="dashboard-header">
+    <h1 class="dashboard-header__title">Dashboard Administrativo</h1>
+    <p class="dashboard-header__subtitle">Bienvenido, {{ authStore.user()?.firstName }}. Resume general del sistema.</p>
+  </div>
+
+  @if (loading()) {
+    <div class="dashboard-kpis">
+      @for (_ of [1,2,3,4,5,6]; track $index) {
+        <p-skeleton height="120px" styleClass="dashboard-skeleton-card" />
+      }
+    </div>
+    <div class="dashboard-charts">
+      <p-skeleton height="280px" styleClass="dashboard-skeleton-card" />
+      <p-skeleton height="280px" styleClass="dashboard-skeleton-card" />
+    </div>
+    <p-skeleton height="300px" styleClass="dashboard-skeleton-card" />
+    <p-skeleton height="300px" styleClass="dashboard-skeleton-card" />
+  } @else {
+    <div class="dashboard-kpis">
+      <div class="kpi-card">
+        <div class="kpi-card__icon kpi-card__icon--blue"><i class="pi pi-ticket"></i></div>
+        <div class="kpi-card__info">
+          <span class="kpi-card__number">{{ totalTickets() }}</span>
+          <span class="kpi-card__label">Total Tickets</span>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card__icon kpi-card__icon--orange"><i class="pi pi-inbox"></i></div>
+        <div class="kpi-card__info">
+          <span class="kpi-card__number">{{ queueTickets() }}</span>
+          <span class="kpi-card__label">En cola</span>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card__icon kpi-card__icon--purple"><i class="pi pi-clock"></i></div>
+        <div class="kpi-card__info">
+          <span class="kpi-card__number">{{ inProgressTickets() }}</span>
+          <span class="kpi-card__label">En progreso</span>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card__icon kpi-card__icon--green"><i class="pi pi-check-circle"></i></div>
+        <div class="kpi-card__info">
+          <span class="kpi-card__number">{{ resolvedToday() }}</span>
+          <span class="kpi-card__label">Resueltos hoy</span>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card__icon kpi-card__icon--teal"><i class="pi pi-users"></i></div>
+        <div class="kpi-card__info">
+          <span class="kpi-card__number">{{ agentsCount() }}</span>
+          <span class="kpi-card__label">Agentes</span>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card__icon kpi-card__icon--gray"><i class="pi pi-user"></i></div>
+        <div class="kpi-card__info">
+          <span class="kpi-card__number">{{ clientsCount() }}</span>
+          <span class="kpi-card__label">Clientes</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-charts">
+      <div class="chart-card">
+        <h3 class="chart-card__title">Distribución por Estado</h3>
+        <div class="chart-card__wrapper">
+          <p-chart type="doughnut" [data]="statusChartData()" [options]="doughnutOptions" />
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3 class="chart-card__title">Distribución por Prioridad</h3>
+        <div class="chart-card__wrapper">
+          <p-chart type="doughnut" [data]="priorityChartData()" [options]="doughnutOptions" />
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-tables">
+      <div class="table-card">
+        <h3 class="table-card__title">Últimos tickets en cola</h3>
+        @if (recentQueueTickets().length === 0) {
+          <div class="table-card__empty">
+            <i class="pi pi-inbox table-card__empty-icon"></i>
+            <p class="table-card__empty-text">No hay tickets en cola.</p>
+          </div>
+        } @else {
+          <p-table [value]="recentQueueTickets()" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Prioridad</th>
+                <th>Categoría</th>
+                <th>Fecha</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-ticket>
+              <tr class="table-card__row">
+                <td><a [routerLink]="['/admin/tickets', ticket.id]" class="table-card__link">#{{ ticket.id }}</a></td>
+                <td><span class="table-card__title-cell" [pTooltip]="ticket.title" tooltipPosition="top">{{ ticket.title }}</span></td>
+                <td><p-tag [value]="getPriorityLabel(ticket.priority)" [severity]="getPrioritySeverity(ticket.priority)" /></td>
+                <td><span class="table-card__category-tag">{{ getCategoryLabel(ticket.category) }}</span></td>
+                <td class="table-card__date">{{ ticket.createdAt | date:'dd/MM/yyyy' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        }
+      </div>
+
+      <div class="table-card">
+        <h3 class="table-card__title">Últimos tickets resueltos</h3>
+        @if (recentResolvedTickets().length === 0) {
+          <div class="table-card__empty">
+            <i class="pi pi-check-circle table-card__empty-icon"></i>
+            <p class="table-card__empty-text">No hay tickets resueltos aún.</p>
+          </div>
+        } @else {
+          <p-table [value]="recentResolvedTickets()" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Prioridad</th>
+                <th>Agente</th>
+                <th>Resuelto</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-ticket>
+              <tr class="table-card__row">
+                <td><a [routerLink]="['/admin/tickets', ticket.id]" class="table-card__link">#{{ ticket.id }}</a></td>
+                <td><span class="table-card__title-cell" [pTooltip]="ticket.title" tooltipPosition="top">{{ ticket.title }}</span></td>
+                <td><p-tag [value]="getPriorityLabel(ticket.priority)" [severity]="getPrioritySeverity(ticket.priority)" /></td>
+                <td>{{ getUserName(ticket.agentId) }}</td>
+                <td class="table-card__date">{{ ticket.resolvedAt | date:'dd/MM/yyyy' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        }
+      </div>
+    </div>
+  }
+</div>

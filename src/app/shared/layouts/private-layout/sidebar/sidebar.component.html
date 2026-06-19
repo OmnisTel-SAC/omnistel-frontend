@@ -1,0 +1,47 @@
+<div class="sidebar-wrapper" [class.sidebar-wrapper--open]="open()">
+  <div class="sidebar__overlay" (click)="navClick.emit()"></div>
+
+  <div class="sidebar-main">
+    <div class="sidebar__logo-wrapper">
+      <img class="sidebar__logo" src="img/landing/Omnistel_logo_blanco.png" alt="OmnisTel" />
+    </div>
+
+    <div class="sidebar__divider"></div>
+
+    <nav class="sidebar__nav">
+      @for (item of menuItems(); track item.label) {
+        <a class="sidebar__item"
+           [routerLink]="item.route"
+           routerLinkActive="sidebar__item--active"
+           [routerLinkActiveOptions]="{ exact: item.exact }"
+           #rla="routerLinkActive"
+           (click)="navClick.emit()">
+          <div class="sidebar__item-icon-wrapper">
+            <i class="pi {{ item.icon }} sidebar__item-icon"></i>
+          </div>
+          <span class="sidebar__item-label">{{ item.label }}</span>
+          @if (rla.isActive) {
+            <i class="pi pi-chevron-right sidebar__item-arrow"></i>
+          }
+        </a>
+      }
+    </nav>
+
+    <div class="sidebar__user">
+      <div class="sidebar__user-avatar">{{ userInitials() }}</div>
+      <div class="sidebar__user-info">
+        <div class="sidebar__user-name">{{ authStore.user()?.firstName }} {{ authStore.user()?.lastName }}</div>
+        <div class="sidebar__user-role">{{ roleLabel() }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-logout">
+    <button class="sidebar-logout__btn" (click)="authStore.logout()">
+      <div class="sidebar-logout__icon-wrapper">
+        <i class="pi pi-sign-out sidebar-logout__icon"></i>
+      </div>
+      <span>Cerrar Sesión</span>
+    </button>
+  </div>
+</div>

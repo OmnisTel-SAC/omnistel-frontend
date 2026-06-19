@@ -1,0 +1,149 @@
+<div class="tickets-page">
+  <p-confirmDialog />
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">Todos los Tickets</h1>
+      <p class="page-header__subtitle">Gestión global de tickets del sistema.</p>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <p-skeleton height="400px" styleClass="tickets-skeleton" />
+  } @else {
+    <div class="page-card">
+      <div class="tickets-filters">
+        <div class="tickets-filters__group">
+          <label class="tickets-filters__label">Estado</label>
+          <p-select
+            [options]="statusOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Filtrar por estado"
+            styleClass="tickets-filters__select"
+            [(ngModel)]="statusFilter"
+            (onChange)="applyFilters()"
+          />
+        </div>
+        <div class="tickets-filters__group">
+          <label class="tickets-filters__label">Prioridad</label>
+          <p-select
+            [options]="priorityOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Filtrar por prioridad"
+            styleClass="tickets-filters__select"
+            [(ngModel)]="priorityFilter"
+            (onChange)="applyFilters()"
+          />
+        </div>
+        <span class="tickets-filters__count">{{ filteredTickets().length }} ticket(s)</span>
+      </div>
+
+      @if (filteredTickets().length === 0) {
+        <div class="tickets-empty">
+          <i class="pi pi-inbox tickets-empty__icon"></i>
+          <p class="tickets-empty__text">No se encontraron tickets con los filtros seleccionados.</p>
+        </div>
+      } @else {
+        <p-table [value]="filteredTickets()" [tableStyle]="{ 'min-width': '80rem' }">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Estado</th>
+              <th>Prioridad</th>
+              <th>Categoría</th>
+              <th>Cliente</th>
+              <th>Agente</th>
+              <th>Fecha</th>
+              <th style="width: 200px;">Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-ticket>
+            <tr class="tickets-row">
+              <td><a [routerLink]="['/admin/tickets', ticket.id]" class="tickets-link">#{{ ticket.id }}</a></td>
+              <td><span class="tickets-title-cell" [pTooltip]="ticket.title" tooltipPosition="top">{{ ticket.title }}</span></td>
+              <td><p-tag [value]="getStatusLabel(ticket.status)" [severity]="getStatusSeverity(ticket.status)" /></td>
+              <td><p-tag [value]="getPriorityLabel(ticket.priority)" [severity]="getPrioritySeverity(ticket.priority)" /></td>
+              <td><span class="tickets-category-tag">{{ getCategoryLabel(ticket.category) }}</span></td>
+              <td>{{ getUserName(ticket.clientId) }}</td>
+              <td>{{ getUserName(ticket.agentId) }}</td>
+              <td class="tickets-date">{{ ticket.createdAt | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <div class="tickets-actions">
+                  @if (ticket.status === 'OPEN' || ticket.status === 'REOPENED') {
+                    <button
+                      pButton
+                      type="button"
+                      label="Asignar"
+                      icon="pi pi-user-plus"
+                      class="tickets-action-btn tickets-action-btn--assign"
+                      (click)="openAssignDialog(ticket)"
+                    ></button>
+                  }
+                  @if (ticket.status === 'ASSIGNED') {
+                    <button
+                      pButton
+                      type="button"
+                      label="En Progreso"
+                      icon="pi pi-play"
+                      class="tickets-action-btn tickets-action-btn--progress"
+                      (click)="updateStatus(ticket, 'IN_PROGRESS')"
+                    ></button>
+                  }
+                  @if (ticket.status === 'IN_PROGRESS') {
+                    <button
+                      pButton
+                      type="button"
+                      label="Resolver"
+                      icon="pi pi-check"
+                      class="tickets-action-btn tickets-action-btn--resolve"
+                      (click)="updateStatus(ticket, 'RESOLVED')"
+                    ></button>
+                  }
+                  <a
+                    [routerLink]="['/admin/tickets', ticket.id]"
+                    class="tickets-action-btn tickets-action-btn--view"
+                  >
+                    <i class="pi pi-eye"></i> Ver
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    </div>
+  }
+
+  <p-dialog
+    header="Asignar ticket #{{ selectedTicket()?.id }}"
+    [modal]="true"
+    [(visible)]="showAssignDialog"
+    [style]="{ width: '420px' }"
+  >
+    <div class="assign-dialog">
+      <p class="assign-dialog__label">Selecciona un agente:</p>
+      <p-select
+        [options]="agentOptions()"
+        optionLabel="fullName"
+        placeholder="Seleccionar agente..."
+        styleClass="assign-dialog__select"
+        [(ngModel)]="selectedAgent"
+        [appendTo]="'body'"
+      />
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton type="button" label="Cancelar" class="p-button-text" (click)="showAssignDialog.set(false)"></button>
+      <button
+        pButton
+        type="button"
+        label="Asignar"
+        icon="pi pi-check"
+        [disabled]="!selectedAgent() || assigning()"
+        [loading]="assigning()"
+        (click)="confirmAssign()"
+      ></button>
+    </ng-template>
+  </p-dialog>
+</div>

@@ -1,0 +1,38 @@
+<header class="topbar">
+  <div class="topbar__left">
+    <button class="topbar__hamburger" (click)="$event.stopPropagation(); menuToggle.emit()" aria-label="Toggle menu">
+      <i class="pi pi-bars"></i>
+    </button>
+    <div class="topbar__search">
+      <i class="pi pi-search topbar__search-icon"></i>
+      <input class="topbar__search-input" type="text" placeholder="Buscar...." />
+    </div>
+  </div>
+
+  <div class="topbar__right">
+    @if (authStore.role() === 'CLIENT') {
+      <button class="topbar__create-btn" routerLink="/client/create-ticket">Crear Tickets</button>
+    }
+    <app-notification-bell />
+
+    <div class="topbar__avatar-wrapper" (click)="toggleDropdown()">
+      <div class="topbar__avatar">{{ userInitials() }}</div>
+
+      @if (dropdownOpen) {
+        <div class="topbar__dropdown">
+          <div class="topbar__dropdown-header">
+            <div class="topbar__dropdown-avatar">{{ userInitials() }}</div>
+            <div>
+              <div class="topbar__dropdown-name">{{ userName() }}</div>
+              <div class="topbar__dropdown-role">{{ authStore.role() }}</div>
+            </div>
+          </div>
+          <div class="topbar__dropdown-divider"></div>
+          <button class="topbar__dropdown-item topbar__dropdown-item--danger" (click)="logout()">
+            <i class="pi pi-sign-out"></i> Cerrar sesión
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</header>

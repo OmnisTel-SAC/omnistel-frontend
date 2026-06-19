@@ -1,0 +1,115 @@
+<div class="create-page">
+  <p-confirmDialog />
+  <div class="create-card">
+    <div class="create-card__header">
+      <h1 class="create-card__title">Crear Nuevo Ticket</h1>
+      <p class="create-card__subtitle">Reporta un nuevo incidente o solicitud de soporte técnico.</p>
+    </div>
+
+    <form class="create-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="create-form__grid">
+        <div class="create-form__group create-form__group--full">
+          <label class="create-form__label" for="title">Título</label>
+          <input
+            id="title"
+            class="create-form__input"
+            formControlName="title"
+            pInputText
+            placeholder="Describe brevemente el problema..."
+          />
+          @if (form.get('title')?.invalid && form.get('title')?.touched) {
+            <small class="create-form__error">El título es obligatorio (máx. 200 caracteres).</small>
+          }
+        </div>
+
+        <div class="create-form__group">
+          <label class="create-form__label" for="category">Categoría</label>
+          <p-select
+            id="category"
+            formControlName="category"
+            [options]="categories"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecciona una categoría"
+            styleClass="create-form__dropdown"
+          />
+          @if (form.get('category')?.invalid && form.get('category')?.touched) {
+            <small class="create-form__error">Selecciona una categoría.</small>
+          }
+        </div>
+
+        <div class="create-form__group">
+          <label class="create-form__label" for="priority">Prioridad</label>
+          <p-select
+            id="priority"
+            formControlName="priority"
+            [options]="priorities"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecciona una prioridad"
+            styleClass="create-form__dropdown"
+          />
+          @if (form.get('priority')?.invalid && form.get('priority')?.touched) {
+            <small class="create-form__error">Selecciona una prioridad.</small>
+          }
+        </div>
+
+        <div class="create-form__group create-form__group--full">
+          <label class="create-form__label" for="description">Descripción</label>
+          <textarea
+            id="description"
+            class="create-form__textarea"
+            formControlName="description"
+            pTextarea
+            rows="6"
+            placeholder="Proporciona todos los detalles relevantes sobre tu solicitud..."
+          ></textarea>
+        </div>
+
+        <div class="create-form__group create-form__group--full">
+          <label class="create-form__label">Archivo Adjunto (opcional)</label>
+          <div class="create-form__file-upload-wrapper">
+            <input #fileInput type="file" hidden accept="image/jpeg,image/png,image/gif,image/webp" multiple (change)="onSelectFiles($event.target.files); fileInput.value=''" />
+            <button type="button" class="create-form__file-btn" (click)="fileInput.click()">
+              <i class="pi pi-paperclip"></i>
+              Adjuntar archivos
+            </button>
+            <span class="create-form__file-hint">Solo imágenes — PNG, JPG, GIF, WebP (máx. 10 MB)</span>
+          </div>
+          @if (files().length > 0) {
+            <div class="create-form__file-list">
+              @for (file of files(); track $index) {
+                <div class="create-form__file-item">
+                  <i class="pi pi-file"></i>
+                  <span class="create-form__file-name">{{ file.name }}</span>
+                  <button type="button" class="create-form__file-remove" (click)="onRemoveFile($index)">
+                    <i class="pi pi-times"></i>
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="create-form__actions">
+        <button
+          pButton
+          type="button"
+          label="Cancelar"
+          class="create-form__btn create-form__btn--secondary"
+          (click)="onCancel()"
+        ></button>
+        <button
+          pButton
+          type="submit"
+          label="Enviar Ticket"
+          icon="pi pi-send"
+          class="create-form__btn create-form__btn--primary"
+          [disabled]="form.invalid || submitting()"
+          [loading]="submitting()"
+        ></button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<header class="header" [class.scrolled]="scrolled()">
+  <div class="header__inner">
+    <a routerLink="/" class="logo">
+      <img class="logo__img" src="img/landing/Omnistel_logo.png" alt="OmnisTel" />
+    </a>
+    <nav class="nav">
+      <a class="nav__link" href="#planes">Hogar</a>
+      <a class="nav__link" href="#servicios">Empresas</a>
+      <a class="nav__link" href="#cobertura">Cobertura</a>
+      <a class="nav__link" href="#helpdesk">Ayuda</a>
+      <a class="nav__link" href="#contacto">Contacto</a>
+    </nav>
+    <div class="header__actions">
+      <a routerLink="/login" class="btn-portal">Portal de soporte</a>
+    </div>
+    <button class="hamburger" (click)="menuOpen = !menuOpen">
+      <i class="pi pi-bars"></i>
+    </button>
+  </div>
+  @if (menuOpen) {
+    <div class="mobile-menu">
+      <a class="mobile-menu__link" href="#planes" (click)="menuOpen = false">Hogar</a>
+      <a class="mobile-menu__link" href="#servicios" (click)="menuOpen = false">Empresas</a>
+      <a class="mobile-menu__link" href="#cobertura" (click)="menuOpen = false">Cobertura</a>
+      <a class="mobile-menu__link" href="#helpdesk" (click)="menuOpen = false">Ayuda</a>
+      <a class="mobile-menu__link" href="#contacto" (click)="menuOpen = false">Contacto</a>
+      <div class="mobile-menu__actions">
+        <a routerLink="/login" class="btn-portal" (click)="menuOpen = false">Portal de soporte</a>
+      </div>
+    </div>
+  }
+</header>

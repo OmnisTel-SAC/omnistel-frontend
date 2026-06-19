@@ -1,0 +1,307 @@
+<div class="detail-page">
+  <p-toast position="top-right" />
+  <p-confirmDialog />
+
+  @if (loading() && !ticket()) {
+    <div class="detail-loading">
+      <p-skeleton width="100%" height="40px" />
+      <p-skeleton width="60%" height="200px" />
+      <p-skeleton width="100%" height="300px" />
+    </div>
+  } @else if (ticket(); as t) {
+    <div class="detail-container">
+      <!-- ─── COLUMNA PRINCIPAL ─── -->
+      <div class="detail-main">
+        <div class="detail-header">
+          <div class="detail-header__info">
+            <div class="detail-header__top">
+              <h1 class="detail-header__title">{{ t.title }}</h1>
+              <span class="detail-header__id">#{{ t.id }}</span>
+            </div>
+          </div>
+          <div class="detail-header__badges">
+            <p-tag
+              [value]="getStatusLabel(t.status)"
+              [severity]="getStatusSeverity(t.status)"
+              styleClass="detail-badge"
+            />
+            <p-tag
+              [value]="getPriorityLabel(t.priority)"
+              [severity]="getPrioritySeverity(t.priority)"
+              styleClass="detail-badge"
+            />
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3 class="detail-section__title">Descripción del problema</h3>
+          <div class="detail-description">
+            {{ t.description || 'Sin descripción adicional.' }}
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3 class="detail-section__title">Historial</h3>
+          <div class="detail-timeline-wrapper">
+            <p-timeline [value]="timelineEvents()" align="alternate">
+              <ng-template pTemplate="marker" let-event>
+                <span
+                  class="detail-timeline-marker"
+                  [style.background]="event.color || '#C4D2B9'"
+                >
+                  <i [class]="event.icon"></i>
+                </span>
+              </ng-template>
+              <ng-template pTemplate="content" let-event>
+                <div
+                  class="detail-timeline-card"
+                  [class.detail-timeline-card--comment]="event.type === 'comment'"
+                  [style.--card-accent]="event.type === 'comment' ? (event.userRole === 'CLIENT' ? '#B8CCA8' : '#E8F4F8') : 'transparent'"
+                >
+                  <div class="detail-timeline-card__header">
+                    @if (event.type === 'comment') {
+                      <span
+                        class="detail-timeline-avatar"
+                        [style.background]="event.userRole === 'CLIENT' ? '#B8CCA8' : '#5f8ab7'"
+                      >
+                        {{ event.userRole === 'CLIENT' ? 'C' : 'A' }}
+                      </span>
+                    }
+                    <div>
+                      <span class="detail-timeline-card__title">{{ event.title }}</span>
+                      <span class="detail-timeline-card__date">{{ event.date | date:'dd/MM/yyyy HH:mm' }}</span>
+                    </div>
+                  </div>
+                  @if (event.description) {
+                    <p class="detail-timeline-card__desc">{{ event.description }}</p>
+                  }
+                </div>
+              </ng-template>
+            </p-timeline>
+          </div>
+        </div>
+
+        @if (canComment()) {
+          <div class="detail-section">
+            <h3 class="detail-section__title">Responder</h3>
+            <div class="detail-comment-form">
+              <textarea
+                pTextarea
+                rows="3"
+                class="detail-comment-form__input"
+                placeholder="Escribe tu respuesta o comenta algo..."
+                [formControl]="commentForm.controls.message"
+              ></textarea>
+              <div class="detail-comment-form__actions">
+                <button
+                  pButton
+                  type="button"
+                  label="Enviar"
+                  icon="pi pi-send"
+                  class="detail-comment-form__btn"
+                  [disabled]="commentForm.invalid || submitting()"
+                  [loading]="submitting()"
+                  (click)="onSubmitComment()"
+                ></button>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (isResolved()) {
+          <div class="detail-resolved-banner">
+            <i class="pi pi-check-circle detail-resolved-banner__icon"></i>
+            <div>
+              <p class="detail-resolved-banner__text">Este ticket ha sido resuelto.</p>
+              <p class="detail-resolved-banner__sub">No se pueden realizar más cambios en el estado.</p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- ─── SIDEBAR ─── -->
+      <div class="detail-sidebar">
+        <div class="detail-sidebar-card">
+          <h3 class="detail-sidebar-card__title">Información del Ticket</h3>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Cliente</span>
+            <span class="detail-sidebar-card__value">
+              @if (client(); as c) {
+                {{ c.firstName }} {{ c.lastName }}
+              } @else {
+                <span class="detail-sidebar-card__muted">ID: {{ t.clientId }}</span>
+              }
+            </span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Email</span>
+            <span class="detail-sidebar-card__value">{{ client()?.email || '—' }}</span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Ticket ID</span>
+            <span class="detail-sidebar-card__value">#{{ t.id }}</span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Categoría</span>
+            <span class="detail-sidebar-card__category">{{ getCategoryLabel(t.category) }}</span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Creado</span>
+            <span class="detail-sidebar-card__value">{{ t.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Actualizado</span>
+            <span class="detail-sidebar-card__value">
+              {{ t.updatedAt ? (t.updatedAt | date:'dd/MM/yyyy HH:mm') : '—' }}
+            </span>
+          </div>
+
+          <div class="detail-sidebar-card__item">
+            <span class="detail-sidebar-card__label">Estado</span>
+            <p-tag
+              [value]="getStatusLabel(t.status)"
+              [severity]="getStatusSeverity(t.status)"
+              styleClass="detail-badge"
+            />
+          </div>
+        </div>
+
+        @if (canAct()) {
+          <div class="detail-sidebar-card">
+            <h3 class="detail-sidebar-card__title">Acciones</h3>
+            <div class="detail-actions">
+              @if (t.status === 'ASSIGNED') {
+                <button
+                  pButton
+                  label="Iniciar Atención"
+                  icon="pi pi-play"
+                  class="p-button-info detail-actions__btn"
+                  [loading]="updating()"
+                  (click)="updateStatus('IN_PROGRESS')"
+                ></button>
+              }
+              @if (t.status === 'IN_PROGRESS') {
+                <button
+                  pButton
+                  label="Marcar Resuelto"
+                  icon="pi pi-check"
+                  class="p-button-success detail-actions__btn"
+                  [loading]="updating()"
+                  (click)="updateStatus('RESOLVED')"
+                ></button>
+              }
+            </div>
+          </div>
+        }
+
+        @if (isResolved()) {
+          <div class="detail-resolved-box">
+            <i class="pi pi-check-circle" style="color: #27ae60; font-size: 1.5rem;"></i>
+            <span>Ticket resuelto</span>
+          </div>
+        }
+
+        <div class="detail-sidebar-card">
+          <h3 class="detail-sidebar-card__title">Archivos Adjuntos</h3>
+          @if (attachments().length === 0) {
+            <p class="detail-sidebar-card__empty">No hay archivos adjuntos</p>
+          } @else {
+            <div class="detail-attachments">
+              @for (att of attachments(); track att.id) {
+                <div class="detail-attachment-item">
+                  @if (isImageFile(att.fileName)) {
+                    @if (imageBlobUrls().get(att.id); as imgUrl) {
+                      <img
+                        [src]="imgUrl"
+                        [alt]="att.fileName"
+                        class="detail-attachment-item__image"
+                        (error)="markImageBroken(att)"
+                        [pTooltip]="att.fileName"
+                      />
+                    } @else if (isBroken(att)) {
+                      <div class="detail-attachment-item__file">
+                        <i class="pi pi-file"></i>
+                        <span class="detail-attachment-item__name">{{ att.fileName }}</span>
+                      </div>
+                    } @else {
+                      <div class="detail-attachment-item__loading">
+                        <i class="pi pi-spin pi-spinner"></i>
+                      </div>
+                    }
+                  } @else {
+                    <div class="detail-attachment-item__file">
+                      <i class="pi pi-file"></i>
+                      <span class="detail-attachment-item__name">{{ att.fileName }}</span>
+                    </div>
+                  }
+                  <button
+                    type="button"
+                    class="detail-attachment-item__view"
+                    pTooltip="Ver imagen"
+                    (click)="openPreview(att)"
+                  >
+                    <i class="pi pi-eye"></i>
+                  </button>
+                </div>
+              }
+            </div>
+          }
+
+
+        </div>
+
+        <div class="detail-sidebar-card__back">
+          <button
+            pButton
+            label="Volver a Tickets"
+            icon="pi pi-arrow-left"
+            class="p-button-text"
+            routerLink="/agent/tickets"
+          ></button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <p-dialog
+    [(visible)]="showPreview"
+    [modal]="true"
+    [closable]="true"
+    [dismissableMask]="true"
+    [style]="{ width: '90vw', maxWidth: '900px' }"
+    [header]="previewFileName()"
+    (onHide)="closePreview()"
+  >
+    <div class="preview-container">
+      <div class="preview-toolbar">
+        <button type="button" class="preview-toolbar__btn" pTooltip="Zoom -" (click)="zoomOut()" [disabled]="zoom() <= 0.25">
+          <i class="pi pi-search-minus"></i>
+        </button>
+        <span class="preview-toolbar__label">{{ zoom() * 100 }}%</span>
+        <button type="button" class="preview-toolbar__btn" pTooltip="Zoom +" (click)="zoomIn()" [disabled]="zoom() >= 4">
+          <i class="pi pi-search-plus"></i>
+        </button>
+        <button type="button" class="preview-toolbar__btn" pTooltip="Rotar" (click)="rotateImage()">
+          <i class="pi pi-replay"></i>
+        </button>
+        <button type="button" class="preview-toolbar__btn" pTooltip="Reset" (click)="resetPreview()">
+          <i class="pi pi-refresh"></i>
+        </button>
+      </div>
+      <div class="preview-image-wrapper">
+        <img
+          [src]="previewUrl()"
+          [alt]="previewFileName()"
+          class="preview-image"
+          [style.transform]="'scale(' + zoom() + ') rotate(' + rotation() + 'deg)'"
+        />
+      </div>
+    </div>
+  </p-dialog>
+</div>

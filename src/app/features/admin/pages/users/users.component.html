@@ -1,0 +1,130 @@
+<div class="users-page">
+  <p-confirmDialog />
+  <div class="page-header">
+    <div>
+      <h1 class="page-header__title">Gestión de Usuarios</h1>
+      <p class="page-header__subtitle">Administra agentes y clientes del sistema.</p>
+    </div>
+    <button pButton type="button" label="Crear Agente" icon="pi pi-user-plus" class="page-header__btn" (click)="openCreateDialog()"></button>
+  </div>
+
+  <p-tabs value="0" styleClass="users-tabs">
+    <p-tablist>
+      <p-tab value="0">Agentes ({{ agents().length }})</p-tab>
+      <p-tab value="1">Clientes ({{ clients().length }})</p-tab>
+    </p-tablist>
+
+    <p-tabpanel value="0">
+      @if (loadingAgents()) {
+        <p-skeleton height="300px" styleClass="users-skeleton" />
+      } @else if (agents().length === 0) {
+        <div class="users-empty">
+          <i class="pi pi-users users-empty__icon"></i>
+          <p class="users-empty__text">No hay agentes registrados.</p>
+        </div>
+      } @else {
+        <div class="page-card">
+          <p-table [value]="agents()" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Usuario</th>
+                <th>Rol</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-user>
+              <tr class="users-row">
+                <td>{{ user.id }}</td>
+                <td>{{ user.firstName }} {{ user.lastName }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.username }}</td>
+                <td><span class="users-role-tag">{{ getRoleLabel(user.role) }}</span></td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      }
+    </p-tabpanel>
+
+    <p-tabpanel value="1">
+      @if (loadingClients()) {
+        <p-skeleton height="300px" styleClass="users-skeleton" />
+      } @else if (clients().length === 0) {
+        <div class="users-empty">
+          <i class="pi pi-user users-empty__icon"></i>
+          <p class="users-empty__text">No hay clientes registrados.</p>
+        </div>
+      } @else {
+        <div class="page-card">
+          <p-table [value]="clients()" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Usuario</th>
+                <th>Rol</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-user>
+              <tr class="users-row">
+                <td>{{ user.id }}</td>
+                <td>{{ user.firstName }} {{ user.lastName }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.username }}</td>
+                <td><span class="users-role-tag">{{ getRoleLabel(user.role) }}</span></td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      }
+    </p-tabpanel>
+  </p-tabs>
+</div>
+
+<p-dialog
+  header="Crear Nuevo Agente"
+  [modal]="true"
+  [(visible)]="showCreateDialog"
+  [style]="{ width: '480px' }"
+>
+  <div class="create-form">
+    <div class="create-form__group">
+      <label class="create-form__label">Nombre *</label>
+      <input pInputText class="create-form__input" placeholder="Nombres" [(ngModel)]="formData().firstName" />
+    </div>
+    <div class="create-form__group">
+      <label class="create-form__label">Apellido *</label>
+      <input pInputText class="create-form__input" placeholder="Apellidos" [(ngModel)]="formData().lastName" />
+    </div>
+    <div class="create-form__group">
+      <label class="create-form__label">Nombre de usuario *</label>
+      <input pInputText class="create-form__input" placeholder="Username" [(ngModel)]="formData().username" />
+    </div>
+    <div class="create-form__group">
+      <label class="create-form__label">Email *</label>
+      <input pInputText class="create-form__input" type="email" placeholder="correo@ejemplo.com" [(ngModel)]="formData().email" />
+    </div>
+    <div class="create-form__group">
+      <label class="create-form__label">Contraseña *</label>
+      <input pInputText class="create-form__input" type="password" placeholder="••••••••" [(ngModel)]="formData().password" />
+    </div>
+    <div class="create-form__group">
+      <label class="create-form__label">Teléfono</label>
+      <input pInputText class="create-form__input" placeholder="Opcional" [(ngModel)]="formData().phone" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <button pButton type="button" label="Cancelar" class="p-button-text" (click)="showCreateDialog.set(false)"></button>
+    <button
+      pButton
+      type="button"
+      label="Crear Agente"
+      icon="pi pi-check"
+      [loading]="creating()"
+      (click)="confirmCreate()"
+    ></button>
+  </ng-template>
+</p-dialog>
